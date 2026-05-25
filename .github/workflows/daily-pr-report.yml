@@ -19,7 +19,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  generate-report:
+  basic-report:
     runs-on: ubuntu-latest
 
     env:
@@ -40,13 +40,49 @@ jobs:
       - name: Generate PR Report (basic)
         run: python scripts/fetch_and_report.py
 
+      - name: Clean up reports older than 10 days
+        run: |
+          find reports/ -name '*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md' \
+            -mtime +10 -delete -print || true
+
+      - name: Commit and push report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git diff --staged --quiet || git commit -m "chore: daily basic PR report $(date +'%Y-%m-%d')"
+          git push
+
+  llm-report:
+    if: inputs.use_llm != 'false'
+    needs: basic-report
+    runs-on: [self-hosted, amd-network]
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_OWNER: ROCm
+      REPO_NAME: rocm-systems
+      PR_LABEL: "project: rocprofiler-systems"
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+      AMD_LLM_GATEWAY_KEY: ${{ secrets.AMD_LLM_GATEWAY_KEY }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || 'Claude-Sonnet-4.6' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Pull latest (get basic report commit)
+        run: git pull origin main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Generate PR Report (LLM)
-        if: inputs.use_llm != 'false'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
-          AMD_LLM_GATEWAY_KEY: ${{ secrets.AMD_LLM_GATEWAY_KEY }}
-          LLM_MODEL: ${{ vars.LLM_MODEL || 'claude-sonnet-4-20250514' }}
         run: python scripts/generate_llm_report.py
 
       - name: Commit and push report
@@ -54,5 +90,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add reports/
-          git diff --staged --quiet || git commit -m "chore: daily PR report $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "chore: daily LLM PR report $(date +'%Y-%m-%d')"
           git push

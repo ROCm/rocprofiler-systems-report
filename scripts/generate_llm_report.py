@@ -112,7 +112,7 @@ def call_llm(prompt):
         sys.exit(1)
 
     base_url = os.environ.get("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
-    model = os.environ.get("LLM_MODEL", "claude-sonnet-4-20250514")
+    model = os.environ.get("LLM_MODEL", "Claude-Sonnet-4.6")
     max_tokens = int(os.environ.get("LLM_MAX_TOKENS", "8192"))
     gateway_key = os.environ.get("AMD_LLM_GATEWAY_KEY", "")
 

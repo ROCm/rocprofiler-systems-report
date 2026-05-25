@@ -168,6 +168,74 @@ def fetch_reviews(pr_number):
     }
 
 
+# ── Phase 4: Test coverage analysis ──
+
+SOURCE_EXTS = {".cpp", ".c", ".cc", ".cxx", ".h", ".hpp", ".hxx", ".py", ".cmake"}
+TEST_DIR_PATTERNS = re.compile(r"(^|/)tests?/", re.IGNORECASE)
+TEST_FILE_PATTERNS = re.compile(
+    r"(^|/)(test_[^/]+|[^/]+_test\.[^/]+|[^/]+_tests\.[^/]+|[^/]+_unittest\.[^/]+)",
+    re.IGNORECASE,
+)
+CONFIG_EXTS = {".yml", ".yaml", ".json", ".toml", ".cfg", ".ini"}
+DOC_EXTS = {".md", ".rst", ".txt"}
+
+
+def classify_file(filepath):
+    """Classify a file as 'test', 'source', 'build', 'docs', or 'other'."""
+    lower = filepath.lower()
+    _, ext = os.path.splitext(lower)
+    if TEST_DIR_PATTERNS.search(filepath) or TEST_FILE_PATTERNS.search(filepath):
+        return "test"
+    if ext in SOURCE_EXTS:
+        return "source"
+    if ext in CONFIG_EXTS or "cmakelists.txt" in lower or ext == ".cmake":
+        return "build"
+    if ext in DOC_EXTS:
+        return "docs"
+    return "other"
+
+
+def fetch_pr_files(pr_number):
+    """Fetch changed files for a PR and return test coverage analysis."""
+    if remaining_calls["core"] <= 2:
+        return {"verdict": "unknown", "sourceFiles": [], "testFiles": [],
+                "sourceCount": 0, "testCount": 0, "detail": "rate limited"}
+    url = f"{API_BASE}/pulls/{pr_number}/files?per_page=100"
+    data = api_get(url)
+    if not data:
+        return {"verdict": "unknown", "sourceFiles": [], "testFiles": [],
+                "sourceCount": 0, "testCount": 0, "detail": "API error"}
+
+    classified = {"source": [], "test": [], "build": [], "docs": [], "other": []}
+    for f in data:
+        kind = classify_file(f["filename"])
+        classified[kind].append(f["filename"])
+
+    source_count = len(classified["source"])
+    test_count = len(classified["test"])
+
+    if source_count == 0:
+        verdict = "no_source_changes"
+        detail = "config/docs/build only"
+    elif test_count > 0:
+        verdict = "has_tests"
+        detail = f"{test_count} test file(s) updated"
+    else:
+        verdict = "missing_tests"
+        detail = f"{source_count} source file(s) changed, 0 test files"
+
+    return {
+        "verdict": verdict,
+        "sourceFiles": classified["source"],
+        "testFiles": classified["test"],
+        "buildFiles": classified["build"],
+        "docsFiles": classified["docs"],
+        "sourceCount": source_count,
+        "testCount": test_count,
+        "detail": detail,
+    }
+
+
 # ── Main data collection ──
 
 def collect_all_data():
@@ -213,19 +281,25 @@ def collect_all_data():
             pr_data["changedFiles"] = p.get("changed_files", 0)
             pr_data["requestedReviewers"] = [r["login"] for r in p.get("requested_reviewers", [])]
 
+        unknown_tc = {"verdict": "unknown", "sourceFiles": [], "testFiles": [],
+                      "sourceCount": 0, "testCount": 0, "detail": "not enriched"}
+
         if authenticated:
             need_enrichment.append(pr_data)
         elif pr_data["isDraft"]:
             pr_data["ciStatus"] = {"overall": "unknown", "failing": [], "inProgress": []}
             pr_data["reviewInfo"] = {"reviewDecision": "unknown", "approvedBy": [], "changesRequestedBy": []}
+            pr_data["testCoverage"] = unknown_tc
             pr_data["category"] = "draft"
         elif is_wip_title(pr_data["title"]):
             pr_data["ciStatus"] = {"overall": "unknown", "failing": [], "inProgress": []}
             pr_data["reviewInfo"] = {"reviewDecision": "unknown", "approvedBy": [], "changesRequestedBy": []}
+            pr_data["testCoverage"] = unknown_tc
             pr_data["category"] = "wip_not_draft"
         elif pr_data["daysSinceUpdate"] >= 3 and not p:
             pr_data["ciStatus"] = {"overall": "unknown", "failing": [], "inProgress": []}
             pr_data["reviewInfo"] = {"reviewDecision": "unknown", "approvedBy": [], "changesRequestedBy": []}
+            pr_data["testCoverage"] = unknown_tc
             pr_data["category"] = "stale"
         else:
             need_enrichment.append(pr_data)
@@ -251,8 +325,15 @@ def collect_all_data():
         else:
             pr_data["reviewInfo"] = {"reviewDecision": "unknown", "approvedBy": [], "changesRequestedBy": []}
 
+        if remaining_calls["core"] > 2:
+            pr_data["testCoverage"] = fetch_pr_files(num)
+        else:
+            pr_data["testCoverage"] = {"verdict": "unknown", "sourceFiles": [], "testFiles": [],
+                                       "sourceCount": 0, "testCount": 0, "detail": "rate limited"}
+
         pr_data["category"] = categorize(pr_data)
-        print(f"[{pr_data['category']}]")
+        tc = pr_data["testCoverage"]["verdict"]
+        print(f"[{pr_data['category']}] tests:{tc}")
         time.sleep(0.1)
 
     for pr_data in enriched:
@@ -278,6 +359,7 @@ def generate_report(pr_data):
 
     ci_emoji = {"passing": "✅", "failing": "❌", "in_progress": "⏳", "no_checks": "—", "unknown": "❓", "unavailable": "—"}
     review_emoji = {"approved": "✅", "changes_requested": "🔄", "pending": "⏳", "unknown": "❓"}
+    tc_emoji = {"has_tests": "✅", "missing_tests": "🚨", "no_source_changes": "—", "unknown": "❓"}
 
     def pr_link(pr):
         return f"[{REPO}#{pr['number']}]({REPO_URL}/pull/{pr['number']})"
@@ -288,8 +370,8 @@ def generate_report(pr_data):
     def pr_table(prs):
         if not prs:
             return "_None._\n"
-        lines = ["| PR | Title | Author | CI | Review Status | Last Updated | Age |",
-                 "|---|---|---|---|---|---|---|"]
+        lines = ["| PR | Title | Author | Test Coverage | CI | Review Status | Last Updated | Age |",
+                 "|---|---|---|---|---|---|---|---|"]
         for p in prs:
             ci = ci_emoji.get(p.get("ciStatus", {}).get("overall", "unknown"), "❓")
             rv = review_emoji.get(p.get("reviewInfo", {}).get("reviewDecision", "unknown"), "❓")
@@ -304,9 +386,14 @@ def generate_report(pr_data):
             approved_by = p.get("reviewInfo", {}).get("approvedBy", [])
             if approved_by:
                 rv_note += f" ({', '.join(approved_by[:2])})"
+            tc_verdict = p.get("testCoverage", {}).get("verdict", "unknown")
+            tc_detail = p.get("testCoverage", {}).get("detail", "")
+            tc_note = tc_emoji.get(tc_verdict, "❓")
+            if tc_verdict == "missing_tests":
+                tc_note += f" ({tc_detail})"
             title_short = p["title"][:60] + ("..." if len(p["title"]) > 60 else "")
             lines.append(
-                f"| {pr_link(p)} | {title_short} | {author_link(p)} | {ci_note} | {rv_note} | {p['daysSinceUpdate']}d ago | {p['ageInDays']}d |"
+                f"| {pr_link(p)} | {title_short} | {author_link(p)} | {tc_note} | {ci_note} | {rv_note} | {p['daysSinceUpdate']}d ago | {p['ageInDays']}d |"
             )
         return "\n".join(lines) + "\n"
 
@@ -316,17 +403,25 @@ def generate_report(pr_data):
         return "\n".join(f"- 📝 {pr_link(p)} — {p['title'][:70]} ([@{p['author']}](https://github.com/{p['author']}), {p['ageInDays']}d old)" for p in prs) + "\n"
 
     total_ci = {"passing": 0, "failing": 0, "in_progress": 0, "no_checks": 0, "unknown": 0, "unavailable": 0}
+    total_tc = {"has_tests": 0, "missing_tests": 0, "no_source_changes": 0, "unknown": 0}
     all_failing_checks = []
+    missing_tests_prs = []
     for p in pr_data:
         ci_ov = p.get("ciStatus", {}).get("overall", "unknown")
         total_ci[ci_ov] = total_ci.get(ci_ov, 0) + 1
         all_failing_checks.extend(p.get("ciStatus", {}).get("failing", []))
+        tc_v = p.get("testCoverage", {}).get("verdict", "unknown")
+        total_tc[tc_v] = total_tc.get(tc_v, 0) + 1
+        if tc_v == "missing_tests":
+            missing_tests_prs.append(p)
 
     exec_summary_parts = [f"There are **{len(pr_data)}** open PRs with the `{PR_LABEL}` label."]
     if groups["needs_attention"]:
         exec_summary_parts.append(f"**{len(groups['needs_attention'])}** PRs need immediate attention due to failing CI or requested changes.")
     if groups["stale"]:
         exec_summary_parts.append(f"**{len(groups['stale'])}** PRs are stale (3+ days without updates).")
+    if missing_tests_prs:
+        exec_summary_parts.append(f"**{len(missing_tests_prs)}** PRs have source changes without corresponding test updates.")
     exec_summary_parts.append(
         f"CI health: {total_ci['passing']} passing, {total_ci['failing']} failing, "
         f"{total_ci['in_progress']} in progress, {total_ci['no_checks'] + total_ci['unknown'] + total_ci['unavailable']} unknown/no checks."
@@ -351,6 +446,25 @@ def generate_report(pr_data):
     for p in groups["wip_not_draft"]:
         action_num += 1
         actions.append(f"{action_num}. {pr_link(p)} — WIP in title but not marked as Draft. Convert to draft PR.")
+    for p in missing_tests_prs[:10]:
+        action_num += 1
+        src_count = p.get("testCoverage", {}).get("sourceCount", 0)
+        actions.append(f"{action_num}. {pr_link(p)} — {src_count} source file(s) changed with no test updates. Author [@{p['author']}](https://github.com/{p['author']}) should add tests.")
+
+    missing_tests_table = "_None — all PRs with source changes include tests._\n"
+    if missing_tests_prs:
+        mt_lines = ["| PR | Title | Author | Source Files Changed | Test Files | Detail |",
+                     "|---|---|---|---|---|---|"]
+        for p in missing_tests_prs:
+            tc = p.get("testCoverage", {})
+            src_files = ", ".join(f"`{os.path.basename(f)}`" for f in tc.get("sourceFiles", [])[:5])
+            if len(tc.get("sourceFiles", [])) > 5:
+                src_files += f" +{len(tc['sourceFiles']) - 5} more"
+            title_short = p["title"][:50] + ("..." if len(p["title"]) > 50 else "")
+            mt_lines.append(
+                f"| {pr_link(p)} | {title_short} | {author_link(p)} | {tc.get('sourceCount', 0)} | {tc.get('testCount', 0)} | {src_files} |"
+            )
+        missing_tests_table = "\n".join(mt_lines) + "\n"
 
     report = f"""# rocprofiler-systems — Daily PR Report {today}
 > Filtered from [{OWNER}/{REPO}]({REPO_URL}) · label: `{PR_LABEL}`
@@ -390,6 +504,12 @@ def generate_report(pr_data):
 
 ## CI Health Snapshot
 Out of {len(pr_data)} open PRs: **{total_ci['passing']}** passing, **{total_ci['failing']}** failing, **{total_ci['in_progress']}** in progress, and **{total_ci['no_checks'] + total_ci['unknown'] + total_ci['unavailable']}** with no checks or unknown status.{' Failing check names: ' + ', '.join(f'`{c}`' for c in failing_check_names[:15]) + '.' if failing_check_names else ''}
+
+## 🧪 Test Coverage Analysis
+Out of {len(pr_data)} open PRs: **{total_tc['has_tests']}** include test updates, **{total_tc['missing_tests']}** have source changes without tests, **{total_tc['no_source_changes']}** are config/docs only, **{total_tc['unknown']}** could not be analyzed.
+
+### PRs Missing Test Coverage
+{missing_tests_table}
 
 ## What Changed Since Yesterday
 (No previous report — this is day one.)

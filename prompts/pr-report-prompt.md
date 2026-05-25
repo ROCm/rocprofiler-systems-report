@@ -16,7 +16,9 @@
     {{healthy_count}}         - Passing CI, approved or awaiting review
     {{in_progress_count}}     - Active work, CI running
     {{draft_count}}           - Draft PRs
-    {{pr_data_json}}          - Full categorized PR data as JSON
+    {{missing_tests_count}}   - PRs with source changes but no test updates
+    {{has_tests_count}}       - PRs that include test updates
+    {{pr_data_json}}          - Full categorized PR data as JSON (includes testCoverage per PR)
     {{yesterday_section}}     - Yesterday's report (for context carryover)
 -->
 
@@ -42,8 +44,9 @@ Generate a **Markdown** daily PR report following these rules:
 
 - Every PR MUST be hyperlinked: `[{{repo}}#123]({{repo_url}}/pull/123)`
 - Every author MUST be hyperlinked: `[@user](https://github.com/user)`
-- Tables must have columns: **PR | Title | Author | CI | Review Status | Last Updated | Age**
-- Emojis: ✅ passing · ❌ failing · ⏳ in_progress · 📝 draft · 🔄 changes_requested · 🚨 urgent · ⚠️ warning
+- Tables must have columns: **PR | Title | Author | Test Coverage | CI | Review Status | Last Updated | Age**
+- Test Coverage column emojis: ✅ has tests · 🚨 missing tests · — no source changes · ❓ unknown
+- Other emojis: ✅ passing · ❌ failing · ⏳ in_progress · 📝 draft · 🔄 changes_requested · 🚨 urgent · ⚠️ warning
 
 ### Structure — use exactly these sections
 
@@ -77,6 +80,18 @@ Brief list only, no table needed.
 **## CI Health Snapshot**
 One paragraph: X/total passing, X failing, X in progress, X no checks.
 List names of failing checks if any.
+
+**## 🧪 Test Coverage Analysis** ({{missing_tests_count}} PRs missing tests)
+This is a critical compliance section. For each PR where `testCoverage.verdict` is `"missing_tests"`:
+1. List the PR with its changed source files (from `testCoverage.sourceFiles`)
+2. Analyze what kind of functionality is being changed (based on file names and PR title)
+3. Recommend the appropriate test level: **Unit** (isolated function tests), **Integration** (component interaction), or **System** (end-to-end)
+4. Assess risk: is omitting tests **acceptable** (e.g., trivial refactor, cosmetic) or **unacceptable** (new feature, bug fix, behavioral change)?
+5. Suggest if there are likely adjacent test files under `tests/` that should be extended
+
+Format as a detailed table:
+| PR | Author | Source Files Changed | Recommended Test Level | Risk of No Tests | Suggested Action |
+Include a brief summary: "X out of Y PRs with source changes include test updates. Z PRs are missing tests."
 
 **## What Changed Since Yesterday**
 (Only if yesterday's report was provided.) Bullet list:

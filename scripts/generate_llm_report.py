@@ -18,7 +18,7 @@ Required env vars:
 Optional env vars:
   ANTHROPIC_BASE_URL        - Override API base URL (default: https://api.anthropic.com)
   AMD_LLM_GATEWAY_KEY       - AMD gateway subscription key header
-  LLM_MODEL                 - Model name (default: claude-sonnet-4-20250514)
+  LLM_MODEL                 - Model name (default: Claude-Sonnet-4.6)
   LLM_MAX_TOKENS            - Max response tokens (default: 8192)
   PROMPT_FILE               - Path to prompt template (default: prompts/pr-report-prompt.md)
   REPO_OWNER / REPO_NAME / PR_LABEL  - Override target repo/label
@@ -80,6 +80,9 @@ def build_prompt(template, pr_data, yesterday_report=None):
 
     pr_data_json = json.dumps(groups, indent=2, default=str)
 
+    missing_tests = [p for p in pr_data if p.get("testCoverage", {}).get("verdict") == "missing_tests"]
+    has_tests = [p for p in pr_data if p.get("testCoverage", {}).get("verdict") == "has_tests"]
+
     variables = {
         "today": today,
         "owner": OWNER,
@@ -93,6 +96,8 @@ def build_prompt(template, pr_data, yesterday_report=None):
         "healthy_count": str(len(groups["healthy"])),
         "in_progress_count": str(len(groups["in_progress"])),
         "draft_count": str(len(groups["draft"])),
+        "missing_tests_count": str(len(missing_tests)),
+        "has_tests_count": str(len(has_tests)),
         "pr_data_json": pr_data_json,
         "yesterday_section": yesterday_section,
     }

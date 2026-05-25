@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rocprofiler-systems — Daily PR Report 2026-05-25</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --border: #30363d;
+    --card: #161b22;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --orange: #db6d28;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.8rem; margin: 1.5rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  h2 { font-size: 1.4rem; margin: 1.8rem 0 0.6rem; color: var(--accent); }
+  h3 { font-size: 1.15rem; margin: 1.2rem 0 0.4rem; color: var(--muted); }
+  p { margin: 0.5rem 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    background: var(--card);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+  pre {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.8rem 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  th {
+    background: var(--card);
+    font-weight: 600;
+    color: var(--accent);
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) { background: rgba(22,27,34,0.5); }
+  tr:hover { background: rgba(88,166,255,0.08); }
+  ul { margin: 0.5rem 0 0.5rem 1.5rem; }
+  li { margin: 0.3rem 0; }
+  blockquote {
+    border-left: 3px solid var(--yellow);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: rgba(210,153,34,0.06);
+    border-radius: 0 6px 6px 0;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+  strong { color: #f0f6fc; }
+  .timestamp {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<h1>rocprofiler-systems — Daily PR Report 2026-05-25</h1>
+<blockquote>
+<p>Filtered from <a href="https://github.com/ROCm/rocm-systems" target="_blank">ROCm/rocm-systems</a> · label: <code>project: rocprofiler-systems</code></p>
+</blockquote>
+
+<hr>
+
+<h2>Executive Summary</h2>
+
+<p>There are <strong>41 open PRs</strong> for rocprofiler-systems today, with <strong>12 requiring immediate attention</strong> due to failing CI or change requests. The most significant risk is the C++20 modernization stack — a chain of PRs from <a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a> (<a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">#4080</a>, <a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">#5992</a>, <a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">#5995</a>) shows cascading CI failures across the full matrix, and the oldest is 70 days old with no resolution in sight. CI health is poor overall: of the 20 non-draft PRs that are open and not in-progress, the majority carry at least one failing check, with RHEL builds being a persistent failure pattern across many branches.</p>
+
+<hr>
+
+<h2>⚠️ Needs Attention (12 PRs)</h2>
+
+<table><thead>
+<tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
+</thead><tbody>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6349" target="_blank">rocm-systems#6349</a></td><td>Clean up jacobi-hip example</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>⏳ in_progress</td><td>🔄 Changes requested by @kcossett-amd</td><td>0d ago</td><td>4d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a></td><td>Update version to 1.7.0</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>❌ failing</td><td>✅ Approved by @adjordje-amd</td><td>0d ago</td><td>5d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace hand-rolled flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>⚠️ No review</td><td>13d ago</td><td>13d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>⚠️ No review</td><td>9d ago</td><td>13d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names across emit and register sites</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>✅ Approved by @mradosav-amd</td><td>14d ago</td><td>18d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a></td><td>AI NIC changes for Pensando Phase 2</td><td><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a></td><td>❌ failing</td><td>✅ Approved by @dgaliffiAMD</td><td>4d ago</td><td>19d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>❌ failing</td><td>🔄 Changes requested by @stellaraccident</td><td>2d ago</td><td>24d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5351" target="_blank">rocm-systems#5351</a></td><td>[runtime-instrument] Introduce 3 CLI options and rework some code</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>❌ failing</td><td>⚠️ Pending</td><td>17d ago</td><td>31d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>⚠️ unknown</td><td>🔄 Changes requested by @dgaliffiAMD</td><td>13d ago</td><td>31d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a></td><td>[rocpd] Update rocprofiler-sdk-rocpd api to support versioning</td><td><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a></td><td>❌ failing</td><td>🔄 Changes requested by @jrmadsen</td><td>0d ago</td><td>33d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4993" target="_blank">rocm-systems#4993</a></td><td>Add hip graph tests</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅ passing</td><td>🔄 Changes requested by @kcossett-amd</td><td>6d ago</td><td>41d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>⚠️ Pending</td><td>5d ago</td><td><strong>70d</strong></td></tr>
+</tbody></table>
+
+<h3>Notable CI failures per PR:</h3>
+
+<ul>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/6349" target="_blank">#6349</a>:</strong> CI still running across debian/RHEL matrix; blocked by changes requested from @kcossett-amd — author should address feedback before CI completes.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">#6288</a>:</strong> 🚨 Approved but blocked by <code>ubuntu-jammy (g++, ON, ON, OFF, ON, Release, ON, 7.2)</code> failure. Should be mergeable once this single flaky check is resolved.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">#5995</a>:</strong> ❌ 33 failing checks across the full matrix (all distros/ROCm versions). Targets <code>users/adjordje-amd/cpp20-concepts</code> (a non-<code>develop</code> branch). Stale for 13 days with no reviewer action.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">#5992</a>:</strong> ❌ 5 RHEL 8.10 failures (all ROCm versions). C++20 concepts hitting RHEL gcc compatibility issues. Stale 9 days.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">#5819</a>:</strong> ❌ <code>TheRock CI Summary</code> + <code>Test rocprofiler-compute (shard 1 of 2)</code>. Approved but blocked by test failure for 14 days.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">#5777</a>:</strong> ❌ <code>ubuntu-noble (g++, ON, Release, ON, 7.0)</code> — single failure on an approved PR. Should be quick to fix.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">#5690</a>:</strong> ❌ Linux and Windows package build failures. Changes requested by @stellaraccident; cross-project PR (clr/hip-tests/rccl).</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5351" target="_blank">#5351</a>:</strong> ❌ address sanitizer failure + TheRock + rocprofiler-compute test (shard 2). No review, stale 17 days.</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">#5267</a>:</strong> ❌ Code Coverage on mi325/ubuntu-22.04. Changes requested by @jrmadsen — active today (updated 0d ago).</li>
+<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">#4080</a>:</strong> 🚨 70 days old. <code>TheRock CI Summary</code> + <code>Test rocprofiler-systems (shard 1 of 1)</code> failing. Root PR for the entire C++20 stack — must be resolved to unblock #5992 and #5995.</li>
+</ul>
+
+<hr>
+
+<h2>🕰️ Stale — 3+ days no activity (5 PRs)</h2>
+
+<table><thead>
+<tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
+</thead><tbody>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6237" target="_blank">rocm-systems#6237</a></td><td>Improve Generated Output summary. Cleanup of noisy logs</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅ passing</td><td>⚠️ Pending</td><td><strong>3d ago</strong></td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6236" target="_blank">rocm-systems#6236</a></td><td>refactor(env_vars): use env_vars:: constants in place of ROCPROFSYS_* literals</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅ passing</td><td>⚠️ No review</td><td><strong>6d ago</strong></td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6203" target="_blank">rocm-systems#6203</a></td><td>Replace get_env and set_env from timemory inside rocprofiler-systems</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>✅ passing</td><td>✅ Approved by @marantic-amd</td><td><strong>5d ago</strong></td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6035" target="_blank">rocm-systems#6035</a></td><td>docs: Update install instructions for 7.13</td><td><a href="https://github.com/peterjunpark" target="_blank">@peterjunpark</a></td><td>✅ passing</td><td>✅ Approved by @dgaliffiAMD</td><td><strong>4d ago</strong></td><td>12d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">rocm-systems#5098</a></td><td>Fix output index calculation in transpose_a kernel</td><td><a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a></td><td>✅ passing</td><td>⚠️ No review</td><td><strong>6d ago</strong></td><td>39d</td></tr>
+</tbody></table>
+
+<blockquote>
+<p>⚠️ <strong>Key observations:</strong></p>
+<p>- <strong><a href="https://github.com/ROCm/rocm-systems/pull/6203" target="_blank">#6203</a></strong> and <strong><a href="https://github.com/ROCm/rocm-systems/pull/6035" target="_blank">#6035</a></strong> are both approved with passing CI — these should be <strong>merged immediately</strong>. They are blocked only by reviewer inaction.</p>
+<p>- <strong><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">#5098</a></strong> is an external contribution (39 days old), passing CI, with no review at all. Needs triage.</p>
+<p>- <strong><a href="https://github.com/ROCm/rocm-systems/pull/6236" target="_blank">#6236</a></strong> has had zero activity since creation (6 days, no review assigned via GitHub).</p>
+</blockquote>
+
+<hr>
+
+<h2>⚡ WIP / Not Marked as Draft (0 PRs)</h2>
+
+<p>No PRs currently fall into this category. ✅</p>
+
+<hr>
+
+<h2>✅ Healthy (1 PR)</h2>
+
+<table><thead>
+<tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
+</thead><tbody>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5214" target="_blank">rocm-systems#5214</a></td><td>Fix validation scripts to accept extra OMPT kernels from LLVM</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅ passing</td><td>⚠️ Pending (4 reviewers requested)</td><td>2d ago</td><td>34d</td></tr>
+</tbody></table>
+
+<blockquote>
+<p><strong>Note:</strong> This PR has been open 34 days with passing CI and reviewers requested (<a href="https://github.com/jrmadsen" target="_blank">@jrmadsen</a>, <a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>, <a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a>, <a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a>) — it deserves a review today.</p>
+</blockquote>
+
+<hr>
+
+<h2>⏳ In Progress (2 PRs)</h2>
+
+<table><thead>
+<tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
+</thead><tbody>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a></td><td>Fix pthread_mutex_gotcha roctx pause resume</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>⏳ in_progress</td><td>⚠️ No review yet</td><td>0d ago</td><td>0d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a></td><td>Replace SQLite3/rocpd backend with rocprofiler-hub library</td><td><a href="https://github.com/anujshuk-amd" target="_blank">@anujshuk-amd</a></td><td>⏳ in_progress</td><td>⚠️ Pending</td><td>0d ago</td><td>19d</td></tr>
+</tbody></table>
+
+<blockquote>
+<p><strong><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">#6388</a></strong> was opened today. <strong><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">#5808</a></strong> is a significant architectural change (SQLite3 → rocprofiler-hub) and has been in progress for 19 days — worth a status check once CI completes.</p>
+</blockquote>
+
+<hr>
+
+<h2>📝 Drafts (21 PRs)</h2>
+
+<ul>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6387" target="_blank">rocm-systems#6387</a> — <code>refactor(trace-cache): rename UMP bandwidth metric</code> (<a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a>) — ❌ CI failing, age: 0d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6361" target="_blank">rocm-systems#6361</a> — <code>Enable task_detach part of openmp-fortran-host test</code> (<a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>) — ⏳ CI in progress / partial failures, age: 3d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6355" target="_blank">rocm-systems#6355</a> — <code>Apply strict kwargs checks and fix certain test regexes</code> (<a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>) — ⏳ CI in progress / 1 failure, age: 3d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6300" target="_blank">rocm-systems#6300</a> — <code>feat(rocprof-sys): add SPM beta scaffolding</code> (<a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a>) — ❌ CI failing (ROCm 6.3/6.4 only), age: 5d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a> — <code>refactor(rocprof-sys-causal): centralize runtime state</code> (<a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a>) — ✅ CI passing, age: 5d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6295" target="_blank">rocm-systems#6295</a> — <code>Update dyninst submodule &amp; fix asan build failures</code> (<a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a>) — ✅ CI passing, age: 5d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6254" target="_blank">rocm-systems#6254</a> — <code>Config Robustness: Negative Tests for Invalid Values</code> (<a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a>) — ✅ CI passing, age: 5d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6243" target="_blank">rocm-systems#6243</a> — <code>Switch Perfetto processing in cached data to run in parallel</code> (<a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a>) — ⏳ CI in progress / 2 amdclang++ failures, age: 6d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6240" target="_blank">rocm-systems#6240</a> — <code>Unify control logic with different triggers</code> (<a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a>) — ❌ CI failing (widespread), age: 6d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6116" target="_blank">rocm-systems#6116</a> — <code>Add rocprofsys_push_trace_with_args and cache region arguments</code> (<a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>) — ✅ CI passing, age: 10d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6057" target="_blank">rocm-systems#6057</a> — <code>Wall Clock migration from timemory</code> (<a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a>) — ✅ CI passing, age: 12d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a> — <code>wire ccache (CMake auto-detect + CI cache)</code> (<a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a>) — ❌ CI failing (1 RHEL check), age: 13d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/6006" target="_blank">rocm-systems#6006</a> — <code>rocprofsys exception hierarchy + clean stacktrace</code> (<a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a>) — ❌ CI failing (widespread RHEL + noble + jammy), age: 13d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5867" target="_blank">rocm-systems#5867</a> — <code>Add OpenMP profiling doc</code> (<a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>) — ✅ CI passing, age: 17d ⚠️ no activity in 17d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">rocm-systems#5762</a> — <code>Add RHEL system deps workflow</code> (<a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a>) — ❌ CI failing, age: 20d ⚠️ no activity in 18d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5736" target="_blank">rocm-systems#5736</a> — <code>Support ELF&#x27;s RELR relocation for binary rewrite</code> (<a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>) — ❌ CI failing, age: 21d ⚠️ no activity in 18d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5414" target="_blank">rocm-systems#5414</a> — <code>Add pytest for rocprof-sys-attach (attach/detach/re-attach)</code> (<a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a>) — ✅ CI passing, age: 31d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5285" target="_blank">rocm-systems#5285</a> — <code>Users/marantic amd/argparser refactor</code> (<a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a>) — ✅ CI passing, age: 33d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/5254" target="_blank">rocm-systems#5254</a> — <code>Add clang-tidy in formatting workflow</code> (<a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a>) — ❌ CI failing (<code>clang-tidy</code>, <code>source</code>), age: 33d · labeled <strong>Stale</strong></li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/4769" target="_blank">rocm-systems#4769</a> — <code>Add initial strix halo changes for rocprofiler-systems CI</code> (<a href="https://github.com/jbonnell-amd" target="_blank">@jbonnell-amd</a>) — ❌ CI failing (gfx1151), age: 47d</li>
+<li><a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">rocm-systems#4620</a> — <code>Fix update_env handling of REPLACE mode</code> (<a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a>) — ❌ CI failing (widespread), age: 53d · labeled <strong>Stale</strong></li>
+</ul>
+
+<hr>
+
+<h2>CI Health Snapshot</h2>
+
+<p>Of the <strong>41 open PRs</strong>, roughly <strong>8 non-draft PRs have passing CI</strong> (including those awaiting review), <strong>11 non-draft PRs have failing CI</strong>, <strong>2 non-draft PRs have CI in progress</strong>, and <strong>1 has unknown CI status</strong> (no checks recorded). Among drafts, <strong>8 are passing</strong>, <strong>9 are failing</strong>, and <strong>3 are in progress</strong>. The most persistent failure pattern is <strong>RHEL 8.10 g++ builds</strong> across all ROCm versions (6.3–7.2), affecting PRs in the C++20 modernization stack (#4080, #5992, #5995, #6006, #6009). Other recurring failures include:</p>
+
+<ul>
+<li><strong><code>TheRock CI Summary</code></strong> — a composite gate failing on several PRs (#4080, #5690, #5819, #5995, #5351, #4620, #5736, #5762, #6240)</li>
+<li><strong><code>ubuntu-noble-sanitizers</code></strong> (address/thread/undefined) — failing on #5995, #5351</li>
+<li><strong><code>ubuntu-noble (g++, ON, Release, ON, 7.0)</code></strong> — a commonly failing single check on otherwise-approved PRs (#5777, #5819 area, #6387)</li>
+<li><strong><code>Linux / Build Linux Packages</code></strong> (TheRock build gate) — failing on #5690, #5995, #6387, #4620</li>
+<li><strong><code>Code Coverage • mi325 • ubuntu-22.04</code></strong> — failing on #5267</li>
+</ul>
+
+<hr>
+
+<h2>What Changed Since Yesterday</h2>
+
+<p><em>(No previous report — this is day one. Baseline established as of 2026-05-25.)</em></p>
+
+<hr>
+
+<h2>Recommended Actions</h2>
+
+<ul>
+<li>🚨 <strong>Merge <a href="https://github.com/ROCm/rocm-systems/pull/6203" target="_blank">#6203</a> and <a href="https://github.com/ROCm/rocm-systems/pull/6035" target="_blank">#6035</a> today</strong> — both are approved, CI is green, and they&#x27;ve been waiting 5–6 days. Any maintainer can merge these now.</li>
+</ul>
+
+<ul>
+<li>🚨 <strong>Unblock <a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">#6288</a> (version bump to 1.7.0)</strong> — approved by @adjordje-amd, only one CI failure (<code>ubuntu-jammy / g++ / 7.2</code>). <a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a> or <a href="https://github.com/jrmadsen" target="_blank">@jrmadsen</a> should investigate and re-trigger or hotfix this check.</li>
+</ul>
+
+<ul>
+<li>🚨 <strong><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a>: Resolve CI failures on <a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">#4080</a> (C++20 support, 70 days old)</strong> — this is the root of the entire C++20 stack. <code>Test rocprofiler-systems</code> is the blocking shard. Fixing this unblocks #5992 and #5995.</li>
+</ul>
+
+<ul>
+<li>⚠️ <strong><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a>: Fix the single <code>ubuntu-noble / 7.0</code> failure on <a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">#5777</a></strong> — this is approved by @dgaliffiAMD and has been lingering 19 days over what appears to be an isolated CI failure.</li>
+</ul>
+
+<ul>
+<li>⚠️ <strong><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a>: Address the approved-but-stuck <a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">#5819</a></strong> — approved by @mradosav-amd 14 days ago but <code>Test rocprofiler-compute (shard 1)</code> is failing. Investigate whether this is a flaky test or a real regression.</li>
+</ul>
+
+<ul>
+<li>⚠️ <strong><a href="https://github.com/jrmadsen" target="_blank">@jrmadsen</a>: Review <a href="https://github.com/ROCm/rocm-systems/pull/5214" target="_blank">#5214</a></strong> — passing CI, 34 days old, and you are a requested reviewer. This is the healthiest open PR and should be quick to review.</li>
+</ul>
+
+<ul>
+<li>⚠️ <strong><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a>: Address changes requested by @jrmadsen on <a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">#5267</a></strong> — this rocpd versioning PR has been open 33 days and was updated today, suggesting active work. Confirm the Code Coverage failure is also addressed.</li>
+</ul>
+
+<ul>
+<li>⚠️ <strong>Triage external contribution <a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">#5098</a></strong> (<a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a>) — 39 days old, passing CI, no review. Assign a reviewer or close with explanation.</li>
+</ul>
+
+<ul>
+<li>📋 <strong><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a>: Address your own changes-requested on <a href="https://github.com/ROCm/rocm-systems/pull/4993" target="_blank">#4993</a></strong> (<a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a>) — CI is passing, the PR just needs feedback addressed. This has been blocked 41 days.</li>
+</ul>
+
+<ul>
+<li>📋 <strong>Consider closing or suspending stale drafts</strong>: <a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">#4620</a> (53d), <a href="https://github.com/ROCm/rocm-systems/pull/5254" target="_blank">#5254</a> (33d), <a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">#5762</a> (20d), <a href="https://github.com/ROCm/rocm-systems/pull/5736" target="_blank">#5736</a> (21d) — all have failing CI with no recent activity and are already labeled <code>Stale</code> or effectively abandoned. Cleaning these up will reduce noise.</li>
+</ul>
+
+<hr>
+
+<p><em>Auto-generated: 2026-05-25</em></p>
+</body>
+</html>

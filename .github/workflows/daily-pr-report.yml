@@ -60,10 +60,21 @@ jobs:
       - name: Generate PR Report (LLM)
         run: python scripts/generate_llm_report.py
 
+      - name: Convert report to HTML for GitHub Pages
+        run: |
+          python scripts/md_to_html.py \
+            reports/llm-pr-report-latest.md \
+            docs/reports/llm-pr-report-latest.html
+          today=$(date -u +'%Y-%m-%d')
+          python scripts/md_to_html.py \
+            reports/llm-pr-report-latest.md \
+            "docs/reports/llm-pr-report-${today}.html"
+
       - name: Clean up reports older than 10 days
         run: |
           cutoff=$(date -d '-10 days' '+%Y-%m-%d')
-          for f in reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md; do
+          for f in reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md \
+                   docs/reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].html; do
             [ -f "$f" ] || continue
             fdate=$(echo "$f" | grep -oP '\d{4}-\d{2}-\d{2}')
             if [ "$fdate" \< "$cutoff" ]; then
@@ -76,6 +87,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/
+          git add reports/ docs/
           git diff --staged --quiet || git commit -m "chore: daily LLM PR report $(date +'%Y-%m-%d')"
           git push

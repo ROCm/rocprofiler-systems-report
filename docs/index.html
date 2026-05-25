@@ -1,12 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PR Report Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rocprofiler-systems — PR Report Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --border: #30363d;
+    --card: #161b22;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: inline-block;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    margin: 0.4rem 0;
+    transition: border-color 0.2s;
+  }
+  a:hover { border-color: var(--accent); }
+  .links { display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+</style>
 </head>
 <body>
-  <h1>Daily PR Reports</h1>
-  <ul>
-    <li><a href="reports/llm-pr-report-latest.md">Latest Report</a></li>
-  </ul>
+  <h1>rocprofiler-systems</h1>
+  <p class="subtitle">Daily PR Report Dashboard</p>
+  <div class="links">
+    <a href="reports/llm-pr-report-latest.html">Latest LLM Report</a>
+  </div>
+  <p class="footer">Reports are generated daily at 8:00 AM UTC on weekdays.</p>
 </body>
 </html>

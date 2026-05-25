@@ -403,6 +403,43 @@ Out of {len(pr_data)} open PRs: **{total_ci['passing']}** passing, **{total_ci['
     return report
 
 
+def save_report(report, reports_dir=None, prefix="pr-report"):
+    """Write report to dated + latest files. Returns (dated_path, latest_path)."""
+    if reports_dir is None:
+        reports_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reports")
+    os.makedirs(reports_dir, exist_ok=True)
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    dated_file = os.path.join(reports_dir, f"{prefix}-{today}.md")
+    latest_file = os.path.join(reports_dir, f"{prefix}-latest.md")
+
+    with open(dated_file, "w", encoding="utf-8") as f:
+        f.write(report)
+    with open(latest_file, "w", encoding="utf-8") as f:
+        f.write(report)
+
+    return dated_file, latest_file
+
+
+def get_yesterday_report(reports_dir=None, prefix="pr-report"):
+    """Load yesterday's report for context carryover. Returns content or None."""
+    if reports_dir is None:
+        reports_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reports")
+    try:
+        yesterday = datetime.now(timezone.utc)
+        from datetime import timedelta
+        yesterday -= timedelta(days=1)
+        date_str = yesterday.strftime("%Y-%m-%d")
+        filepath = os.path.join(reports_dir, f"{prefix}-{date_str}.md")
+        if os.path.exists(filepath):
+            print(f"Loading yesterday's report for context: {filepath}")
+            with open(filepath, "r", encoding="utf-8") as f:
+                return f.read()
+    except Exception:
+        pass
+    return None
+
+
 if __name__ == "__main__":
     print("=== rocprofiler-systems PR Report Generator ===\n")
     pr_data = collect_all_data()
@@ -411,19 +448,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     report = generate_report(pr_data)
-
-    import os
-    reports_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reports")
-    os.makedirs(reports_dir, exist_ok=True)
-
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    dated_file = os.path.join(reports_dir, f"pr-report-{today}.md")
-    latest_file = os.path.join(reports_dir, "pr-report-latest.md")
-
-    with open(dated_file, "w", encoding="utf-8") as f:
-        f.write(report)
-    with open(latest_file, "w", encoding="utf-8") as f:
-        f.write(report)
+    dated_file, latest_file = save_report(report)
 
     print(f"\nSaved: {dated_file}")
     print(f"Latest: {latest_file}")

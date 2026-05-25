@@ -3,7 +3,16 @@ name: Daily PR Report
 on:
   schedule:
     - cron: '0 8 * * 1-5'   # Weekdays at 8:00 AM UTC
-  workflow_dispatch:          # Allow manual trigger from Actions tab
+  workflow_dispatch:
+    inputs:
+      use_llm:
+        description: 'Generate LLM report in addition to basic report'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 permissions:
   contents: write
@@ -12,6 +21,12 @@ permissions:
 jobs:
   generate-report:
     runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_OWNER: ROCm
+      REPO_NAME: rocm-systems
+      PR_LABEL: "project: rocprofiler-systems"
 
     steps:
       - name: Checkout repository
@@ -22,13 +37,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Generate PR Report
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_OWNER: ROCm
-          REPO_NAME: rocm-systems
-          PR_LABEL: "project: rocprofiler-systems"
+      - name: Generate PR Report (basic)
         run: python scripts/fetch_and_report.py
+
+      - name: Generate PR Report (LLM)
+        if: inputs.use_llm != 'false'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          AMD_LLM_GATEWAY_KEY: ${{ secrets.AMD_LLM_GATEWAY_KEY }}
+          LLM_MODEL: ${{ vars.LLM_MODEL || 'claude-sonnet-4-20250514' }}
+        run: python scripts/generate_llm_report.py
 
       - name: Commit and push report
         run: |

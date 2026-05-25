@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>rocprofiler-systems — PR Report Dashboard</title>
+<title>ROCm — PR Report Dashboards</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -23,31 +23,39 @@
     max-width: 800px;
     margin: 0 auto;
   }
-  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
   .subtitle { color: var(--muted); margin-bottom: 2rem; }
-  a {
-    color: var(--accent);
+  .card {
+    display: block;
+    color: var(--fg);
     text-decoration: none;
-    font-size: 1.1rem;
-    display: inline-block;
-    padding: 0.8rem 1.2rem;
+    padding: 1.2rem 1.5rem;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--card);
-    margin: 0.4rem 0;
-    transition: border-color 0.2s;
+    margin: 0.6rem 0;
+    transition: border-color 0.2s, transform 0.15s;
   }
-  a:hover { border-color: var(--accent); }
-  .links { display: flex; flex-direction: column; gap: 0.5rem; }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h2 { font-size: 1.2rem; color: var(--accent); margin-bottom: 0.2rem; }
+  .card p { color: var(--muted); font-size: 0.9rem; margin: 0; }
   .footer { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
 </style>
 </head>
 <body>
-  <h1>rocprofiler-systems</h1>
-  <p class="subtitle">Daily PR Report Dashboard</p>
-  <div class="links">
-    <a href="reports/llm-pr-report-latest.html">Latest LLM Report</a>
-  </div>
+  <h1>ROCm PR Report Dashboards</h1>
+  <p class="subtitle">Daily LLM-generated PR reports for ROCm subprojects</p>
+
+  <a class="card" href="rocprofiler-systems.html">
+    <h2>rocprofiler-systems</h2>
+    <p>System-level profiling tools — CI health, test coverage, stale PRs</p>
+  </a>
+
+  <a class="card" href="rocprofiler-compute.html">
+    <h2>rocprofiler-compute</h2>
+    <p>Compute profiling tools — CI health, test coverage, stale PRs</p>
+  </a>
+
   <p class="footer">Reports are generated daily at 8:00 AM UTC on weekdays.</p>
 </body>
 </html>

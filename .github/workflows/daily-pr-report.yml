@@ -10,39 +10,24 @@ permissions:
   pull-requests: read
 
 jobs:
-  # basic-report:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     REPO_OWNER: ROCm
-  #     REPO_NAME: rocm-systems
-  #     PR_LABEL: "project: rocprofiler-systems"
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.12'
-  #     - run: python scripts/fetch_and_report.py
-  #     - name: Clean up reports older than 10 days
-  #       run: |
-  #         find reports/ -name '*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md' \
-  #           -mtime +10 -delete -print || true
-  #     - name: Commit and push report
-  #       run: |
-  #         git config user.name "github-actions[bot]"
-  #         git config user.email "github-actions[bot]@users.noreply.github.com"
-  #         git add reports/
-  #         git diff --staged --quiet || git commit -m "chore: daily basic PR report $(date +'%Y-%m-%d')"
-  #         git push
-
   llm-report:
     runs-on: [self-hosted, amd-network]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: "project: rocprofiler-systems"
+            prefix: "rocprofiler-systems"
+          - label: "project: rocprofiler-compute"
+            prefix: "rocprofiler-compute"
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_OWNER: ROCm
       REPO_NAME: rocm-systems
-      PR_LABEL: "project: rocprofiler-systems"
+      PR_LABEL: ${{ matrix.label }}
+      REPORT_PREFIX: ${{ matrix.prefix }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
       AMD_LLM_GATEWAY_KEY: ${{ secrets.AMD_LLM_GATEWAY_KEY }}
@@ -63,18 +48,18 @@ jobs:
       - name: Convert report to HTML for GitHub Pages
         run: |
           python scripts/md_to_html.py \
-            reports/llm-pr-report-latest.md \
-            docs/reports/llm-pr-report-latest.html
+            "reports/${REPORT_PREFIX}-latest.md" \
+            "docs/reports/${REPORT_PREFIX}-latest.html"
           today=$(date -u +'%Y-%m-%d')
           python scripts/md_to_html.py \
-            reports/llm-pr-report-latest.md \
-            "docs/reports/llm-pr-report-${today}.html"
+            "reports/${REPORT_PREFIX}-latest.md" \
+            "docs/reports/${REPORT_PREFIX}-${today}.html"
 
       - name: Clean up reports older than 10 days
         run: |
           cutoff=$(date -d '-10 days' '+%Y-%m-%d')
-          for f in reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md \
-                   docs/reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].html; do
+          for f in reports/*-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md \
+                   docs/reports/*-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].html; do
             [ -f "$f" ] || continue
             fdate=$(echo "$f" | grep -oP '\d{4}-\d{2}-\d{2}')
             if [ "$fdate" \< "$cutoff" ]; then
@@ -87,6 +72,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
           git add reports/ docs/
-          git diff --staged --quiet || git commit -m "chore: daily LLM PR report $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "chore: daily ${REPORT_PREFIX} PR report $(date +'%Y-%m-%d')"
           git push

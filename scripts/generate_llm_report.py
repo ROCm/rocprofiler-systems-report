@@ -176,7 +176,8 @@ def call_llm(prompt):
 
 
 def main():
-    print("=== LLM-Powered PR Report Generator ===\n")
+    prefix = os.environ.get("REPORT_PREFIX", "llm-pr-report")
+    print(f"=== LLM-Powered PR Report Generator ({PR_LABEL}) ===\n")
 
     reports_dir = os.path.join(PROJECT_ROOT, "reports")
 
@@ -188,7 +189,7 @@ def main():
 
     print(f"\nPhase 2: Building prompt...")
     template = load_prompt_template()
-    yesterday_report = get_yesterday_report(reports_dir, prefix="llm-pr-report")
+    yesterday_report = get_yesterday_report(reports_dir, prefix=prefix)
     prompt = build_prompt(template, pr_data, yesterday_report)
 
     print(f"  Prompt length: {len(prompt):,} chars")
@@ -198,7 +199,7 @@ def main():
 
     print(f"\nPhase 4: Saving report...")
     dated_file, latest_file = save_report(
-        report, reports_dir, prefix="llm-pr-report"
+        report, reports_dir, prefix=prefix
     )
 
     print(f"  Saved: {dated_file}")

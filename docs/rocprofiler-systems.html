@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rocprofiler-systems — PR Report Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --border: #30363d;
+    --card: #161b22;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  .back { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem; }
+  .back:hover { color: var(--accent); }
+  a.report-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: block;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    margin: 0.4rem 0;
+    transition: border-color 0.2s;
+  }
+  a.report-link:hover { border-color: var(--accent); }
+  .footer { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+  <a class="back" href="index.html">← All Dashboards</a>
+  <h1>rocprofiler-systems</h1>
+  <p class="subtitle">Daily PR Report Dashboard</p>
+  <a class="report-link" href="reports/rocprofiler-systems-latest.html">Latest Report</a>
+  <p class="footer">Reports are generated daily at 8:00 AM UTC on weekdays.</p>
+</body>
+</html>

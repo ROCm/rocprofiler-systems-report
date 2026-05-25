@@ -44,65 +44,118 @@ Generate a **Markdown** daily PR report following these rules:
 
 - Every PR MUST be hyperlinked: `[{{repo}}#123]({{repo_url}}/pull/123)`
 - Every author MUST be hyperlinked: `[@user](https://github.com/user)`
-- Tables must have columns: **PR | Title | Author | Test Coverage | CI | Review Status | Last Updated | Age**
-- Test Coverage column emojis: ✅ has tests · 🚨 missing tests · — no source changes · ❓ unknown
-- Other emojis: ✅ passing · ❌ failing · ⏳ in_progress · 📝 draft · 🔄 changes_requested · 🚨 urgent · ⚠️ warning
+- Use emojis sparingly for status: ✅ passing · ❌ failing · ⏳ in progress · 🚨 missing tests · ⚠️ warning
 
-### Structure — use exactly these sections
+### Structure — use exactly these sections in this order
 
-```
-# rocprofiler-systems — Daily PR Report {{today}}
-> Filtered from [{{owner}}/{{repo}}]({{repo_url}}) · label: `{{pr_label}}`
-```
+**# Daily PR Report — {{today}}**
+
+Start the report with this heading. Add a subtitle line:
+> rocprofiler-systems · [{{owner}}/{{repo}}]({{repo_url}}) · label: `{{pr_label}}`
+
+---
 
 **## Executive Summary**
-2-3 sentences: total PRs, biggest risk today, CI health snapshot.
-If yesterday's report exists: what got resolved, what's newly stuck, what changed.
 
-**## ⚠️ Needs Attention** ({{needs_attention_count}} PRs)
-Failing CI or changes requested. Table + note the specific failing checks or who requested changes.
+A concise overview in bullet format:
+- **Total PRs:** {{total_prs}}
+- **In Review:** count of non-draft, non-WIP PRs awaiting or with review
+- **CI Failures:** count of PRs with failing CI
+- **Missing Tests:** {{missing_tests_count}} PRs with source changes but no test updates
+- **Stale:** {{stale_count}} PRs with no recent activity
 
-**## 🕰️ Stale — 3+ days no activity** ({{stale_count}} PRs)
-Table with days-since-update highlighted.
+If yesterday's report exists, add a line about what changed overnight.
 
-**## ⚡ WIP / Not Marked as Draft** ({{wip_not_draft_count}} PRs)
-Titles suggest not ready but aren't drafts. Flag for conversion.
+---
 
-**## ✅ Healthy** ({{healthy_count}} PRs)
-Passing CI, approved or awaiting review. Table.
+**## Key Highlights**
 
-**## ⏳ In Progress** ({{in_progress_count}} PRs)
-Active work, CI running. Brief table.
-
-**## 📝 Drafts** ({{draft_count}} PRs)
-Brief list only, no table needed.
-
-**## CI Health Snapshot**
-One paragraph: X/total passing, X failing, X in progress, X no checks.
-List names of failing checks if any.
-
-**## 🧪 Test Coverage Analysis** ({{missing_tests_count}} PRs missing tests)
-This is a critical compliance section. For each PR where `testCoverage.verdict` is `"missing_tests"`:
-1. List the PR with its changed source files (from `testCoverage.sourceFiles`)
-2. Analyze what kind of functionality is being changed (based on file names and PR title)
-3. Recommend the appropriate test level: **Unit** (isolated function tests), **Integration** (component interaction), or **System** (end-to-end)
-4. Assess risk: is omitting tests **acceptable** (e.g., trivial refactor, cosmetic) or **unacceptable** (new feature, bug fix, behavioral change)?
-5. Suggest if there are likely adjacent test files under `tests/` that should be extended
-
-Format as a detailed table:
-| PR | Author | Source Files Changed | Recommended Test Level | Risk of No Tests | Suggested Action |
-Include a brief summary: "X out of Y PRs with source changes include test updates. Z PRs are missing tests."
-
-**## What Changed Since Yesterday**
-(Only if yesterday's report was provided.) Bullet list:
-- Newly opened PRs
-- PRs that got merged/closed
-- CI status changes (pass→fail or fail→pass)
-- PRs that received reviews
+3-5 bullet points of the most important things a lead should know today.
+Use your judgment based on the PR data — examples:
+- PRs that are approved and ready to merge
+- PRs with persistent CI failures
+- Large PRs that may need extra review attention
+- New PRs opened since yesterday
 - PRs that became stale
 
-**## Recommended Actions**
-Numbered, ordered by priority. Be specific — name the PR and what needs to happen.
+---
+
+**## PR Breakdown**
+
+Group PRs into these subsections. Use compact bullet lists (not tables) for each group.
+Each bullet: `- [{{repo}}#123]({{repo_url}}/pull/123) — **Title** by [@author](https://github.com/author) · CI: status · Review: status · Updated Xd ago`
+
+**### Needs Attention** ({{needs_attention_count}})
+PRs with failing CI or changes requested. Note the specific failing checks or who requested changes.
+
+**### In Review** ({{healthy_count}})
+Passing CI, approved or awaiting review. These are the healthiest PRs.
+
+**### In Progress** ({{in_progress_count}})
+Active work, CI running.
+
+**### Drafts** ({{draft_count}})
+Brief list — just PR link, title, author, and age.
+
+---
+
+**## Risk Signals**
+
+Two subsections:
+
+**### CI Instability**
+List all PRs with failing CI. For each, name the specific failing checks.
+Include a one-line summary: "X/{{total_prs}} PRs have CI failures."
+
+**### Test Gap Summary**
+{{missing_tests_count}} PRs have source changes without corresponding test updates.
+For each PR where `testCoverage.verdict` is `"missing_tests"`:
+- List the PR with its changed source files (from `testCoverage.sourceFiles`)
+- Recommend the appropriate test level: **Unit**, **Integration**, or **System**
+- Assess risk: **Low** (trivial refactor) / **Medium** (existing feature change) / **High** (new feature, bug fix)
+- Note if there are likely adjacent test files under `tests/` that should be extended
+
+Include a one-line summary: "{{has_tests_count}} PRs include test updates. {{missing_tests_count}} PRs are missing tests."
+
+---
+
+**## Stale PRs**
+PRs with no activity for 25+ days. For each:
+- PR link, title, author, days since last update, age
+- One sentence recommendation (ping author, consider closing, etc.)
+
+Also list PRs stale for 3-24 days separately as "going stale" with a brief mention.
+
+---
+
+**## LLM Observations**
+Semantic insights based on PR titles, descriptions, categories, and file changes.
+Examples of what to surface:
+- Patterns across PRs (e.g., multiple PRs touching the same area)
+- PRs that may conflict with each other
+- PRs that seem related and could be reviewed together
+- Unusually large or complex PRs that may need extra scrutiny
+- Positive trends (test coverage improving, PRs getting reviewed quickly)
+
+Keep this to 3-5 bullet points. Be specific — name the PRs.
+
+---
+
+**## Appendix**
+
+**### Raw Stats**
+- Total open PRs: {{total_prs}}
+- Needs attention: {{needs_attention_count}}
+- Healthy/In review: {{healthy_count}}
+- In progress: {{in_progress_count}}
+- Stale (3+ days): {{stale_count}}
+- Drafts: {{draft_count}}
+- WIP not draft: {{wip_not_draft_count}}
+- Test coverage: {{has_tests_count}} with tests / {{missing_tests_count}} missing tests
+
+**### Quick Links**
+- [All open PRs]({{repo_url}}/pulls?q=is%3Apr+is%3Aopen+label%3A%22{{pr_label}}%22)
+- [Failing CI]({{repo_url}}/pulls?q=is%3Apr+is%3Aopen+label%3A%22{{pr_label}}%22+status%3Afailure)
 
 ---
 *Auto-generated: {{today}}*

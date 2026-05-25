@@ -78,7 +78,23 @@ def build_prompt(template, pr_data, yesterday_report=None):
     else:
         yesterday_section = "(No previous report — this is day one.)"
 
-    pr_data_json = json.dumps(groups, indent=2, default=str)
+    def slim_pr(p):
+        """Strip bulky file lists from testCoverage to keep the prompt compact."""
+        pr = dict(p)
+        tc = pr.get("testCoverage")
+        if tc:
+            pr["testCoverage"] = {
+                "verdict": tc.get("verdict", "unknown"),
+                "sourceCount": tc.get("sourceCount", 0),
+                "testCount": tc.get("testCount", 0),
+                "detail": tc.get("detail", ""),
+                "sourceFiles": [os.path.basename(f) for f in tc.get("sourceFiles", [])[:10]],
+                "testFiles": [os.path.basename(f) for f in tc.get("testFiles", [])[:5]],
+            }
+        return pr
+
+    slim_groups = {k: [slim_pr(p) for p in v] for k, v in groups.items()}
+    pr_data_json = json.dumps(slim_groups, indent=2, default=str)
 
     missing_tests = [p for p in pr_data if p.get("testCoverage", {}).get("verdict") == "missing_tests"]
     has_tests = [p for p in pr_data if p.get("testCoverage", {}).get("verdict") == "has_tests"]
@@ -143,7 +159,7 @@ def call_llm(prompt):
 
     req = urllib.request.Request(url, data=body, headers=headers, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
+        with urllib.request.urlopen(req, timeout=300) as resp:
             data = json.loads(resp.read())
             text = data["content"][0]["text"]
             usage = data.get("usage", {})

@@ -4,58 +4,38 @@ on:
   schedule:
     - cron: '0 8 * * 1-5'   # Weekdays at 8:00 AM UTC
   workflow_dispatch:
-    inputs:
-      use_llm:
-        description: 'Generate LLM report in addition to basic report'
-        required: false
-        default: 'true'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
 
 permissions:
   contents: write
   pull-requests: read
 
 jobs:
-  basic-report:
-    runs-on: ubuntu-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPO_OWNER: ROCm
-      REPO_NAME: rocm-systems
-      PR_LABEL: "project: rocprofiler-systems"
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Generate PR Report (basic)
-        run: python scripts/fetch_and_report.py
-
-      - name: Clean up reports older than 10 days
-        run: |
-          find reports/ -name '*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md' \
-            -mtime +10 -delete -print || true
-
-      - name: Commit and push report
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/
-          git diff --staged --quiet || git commit -m "chore: daily basic PR report $(date +'%Y-%m-%d')"
-          git push
+  # basic-report:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     REPO_OWNER: ROCm
+  #     REPO_NAME: rocm-systems
+  #     PR_LABEL: "project: rocprofiler-systems"
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.12'
+  #     - run: python scripts/fetch_and_report.py
+  #     - name: Clean up reports older than 10 days
+  #       run: |
+  #         find reports/ -name '*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md' \
+  #           -mtime +10 -delete -print || true
+  #     - name: Commit and push report
+  #       run: |
+  #         git config user.name "github-actions[bot]"
+  #         git config user.email "github-actions[bot]@users.noreply.github.com"
+  #         git add reports/
+  #         git diff --staged --quiet || git commit -m "chore: daily basic PR report $(date +'%Y-%m-%d')"
+  #         git push
 
   llm-report:
-    if: inputs.use_llm != 'false'
-    needs: basic-report
     runs-on: [self-hosted, amd-network]
 
     env:
@@ -71,11 +51,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Pull latest (get basic report commit)
-        run: git pull origin main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -84,6 +59,18 @@ jobs:
 
       - name: Generate PR Report (LLM)
         run: python scripts/generate_llm_report.py
+
+      - name: Clean up reports older than 10 days
+        run: |
+          cutoff=$(date -d '-10 days' '+%Y-%m-%d')
+          for f in reports/*-report-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md; do
+            [ -f "$f" ] || continue
+            fdate=$(echo "$f" | grep -oP '\d{4}-\d{2}-\d{2}')
+            if [ "$fdate" \< "$cutoff" ]; then
+              echo "Deleting: $f (date: $fdate, cutoff: $cutoff)"
+              rm "$f"
+            fi
+          done
 
       - name: Commit and push report
         run: |

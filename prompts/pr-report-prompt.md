@@ -82,20 +82,32 @@ Use your judgment based on the PR data — examples:
 
 **## PR Breakdown**
 
-Group PRs into these subsections. Use compact bullet lists (not tables) for each group.
-Each bullet: `- [{{repo}}#123]({{repo_url}}/pull/123) — **Title** by [@author](https://github.com/author) · CI: status · Review: status · Updated Xd ago`
+Group PRs into these subsections. Use tables for each group with the columns shown below.
 
 **### Needs Attention** ({{needs_attention_count}})
-PRs with failing CI or changes requested. Note the specific failing checks or who requested changes.
+PRs with failing CI or changes requested.
+
+| PR | Title | Author | CI | Review Status | Failing Checks / Blocker | Last Updated | Age |
+|---|---|---|---|---|---|---|---|
+
+Note the specific failing checks or who requested changes in the "Failing Checks / Blocker" column.
 
 **### In Review** ({{healthy_count}})
 Passing CI, approved or awaiting review. These are the healthiest PRs.
 
+| PR | Title | Author | CI | Review Status | Last Updated | Age |
+|---|---|---|---|---|---|---|
+
 **### In Progress** ({{in_progress_count}})
 Active work, CI running.
 
+| PR | Title | Author | CI | Review Status | Last Updated | Age |
+|---|---|---|---|---|---|---|
+
 **### Drafts** ({{draft_count}})
-Brief list — just PR link, title, author, and age.
+
+| PR | Title | Author | CI | Age |
+|---|---|---|---|---|
 
 ---
 
@@ -104,27 +116,40 @@ Brief list — just PR link, title, author, and age.
 Two subsections:
 
 **### CI Instability**
-List all PRs with failing CI. For each, name the specific failing checks.
+
+| PR | Title | Author | Failing Checks | Last Updated |
+|---|---|---|---|---|
+
 Include a one-line summary: "X/{{total_prs}} PRs have CI failures."
 
 **### Test Gap Summary**
 {{missing_tests_count}} PRs have source changes without corresponding test updates.
-For each PR where `testCoverage.verdict` is `"missing_tests"`:
-- List the PR with its changed source files (from `testCoverage.sourceFiles`)
-- Recommend the appropriate test level: **Unit**, **Integration**, or **System**
-- Assess risk: **Low** (trivial refactor) / **Medium** (existing feature change) / **High** (new feature, bug fix)
-- Note if there are likely adjacent test files under `tests/` that should be extended
+For each PR where `testCoverage.verdict` is `"missing_tests"`, use this table:
+
+| PR | Title | Author | Source Files Changed | Recommended Test Level | Risk of No Tests | Suggested Action |
+|---|---|---|---|---|---|---|
+
+- Recommended Test Level: **Unit**, **Integration**, or **System**
+- Risk of No Tests: **Low** (trivial refactor) / **Medium** (existing feature change) / **High** (new feature, bug fix)
+- Suggested Action: note if there are likely adjacent test files under `tests/` that should be extended
 
 Include a one-line summary: "{{has_tests_count}} PRs include test updates. {{missing_tests_count}} PRs are missing tests."
 
 ---
 
 **## Stale PRs**
-PRs with no activity for 25+ days. For each:
-- PR link, title, author, days since last update, age
-- One sentence recommendation (ping author, consider closing, etc.)
 
-Also list PRs stale for 3-24 days separately as "going stale" with a brief mention.
+**### Stale (25+ days no activity)**
+
+| PR | Title | Author | Last Updated | Age | Recommendation |
+|---|---|---|---|---|---|
+
+One sentence recommendation per PR (ping author, consider closing, etc.)
+
+**### Going Stale (3–24 days no activity)**
+
+| PR | Title | Author | Last Updated | Age |
+|---|---|---|---|---|
 
 ---
 

@@ -19,35 +19,73 @@
     background: var(--bg);
     color: var(--fg);
     line-height: 1.7;
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
   }
-  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
-  .subtitle { color: var(--muted); margin-bottom: 2rem; }
-  .back { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem; }
+  .header {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .back { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
   .back:hover { color: var(--accent); }
-  a.report-link {
+  h1 { font-size: 1.3rem; }
+  .open-link {
+    margin-left: auto;
     color: var(--accent);
     text-decoration: none;
-    font-size: 1.1rem;
-    display: block;
-    padding: 0.8rem 1.2rem;
+    font-size: 0.85rem;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--card);
-    margin: 0.4rem 0;
-    transition: border-color 0.2s;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
   }
-  a.report-link:hover { border-color: var(--accent); }
-  .footer { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+  .open-link:hover { border-color: var(--accent); }
+  #report-container {
+    padding: 0;
+  }
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+  }
 </style>
 </head>
 <body>
-  <a class="back" href="index.html">← All Dashboards</a>
-  <h1>rocprofiler-compute</h1>
-  <p class="subtitle">Daily PR Report Dashboard</p>
-  <a class="report-link" href="reports/rocprofiler-compute-latest.html">Latest Report</a>
-  <p class="footer">Reports are generated daily at 8:00 AM UTC on weekdays.</p>
+  <div class="header">
+    <a class="back" href="index.html">← Dashboards</a>
+    <h1>rocprofiler-compute</h1>
+    <a class="open-link" href="reports/rocprofiler-compute-latest.html" target="_blank">Open in new tab</a>
+  </div>
+  <div id="report-container">
+    <p class="loading">Loading report...</p>
+  </div>
+  <script>
+    fetch('reports/rocprofiler-compute-latest.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const body = doc.querySelector('body');
+        const style = doc.querySelector('style');
+        const container = document.getElementById('report-container');
+        if (style) {
+          const wrapper = document.createElement('div');
+          const shadowRoot = wrapper.attachShadow({ mode: 'open' });
+          shadowRoot.innerHTML = '<style>' + style.textContent + '</style>' + body.innerHTML;
+          container.innerHTML = '';
+          container.appendChild(wrapper);
+        } else {
+          container.innerHTML = body ? body.innerHTML : html;
+        }
+      })
+      .catch(() => {
+        document.getElementById('report-container').innerHTML =
+          '<p class="loading">Report not available yet. Run the workflow to generate it.</p>';
+      });
+  </script>
 </body>
 </html>

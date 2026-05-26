@@ -1,4 +1,4 @@
-name: Daily PR Report-V1
+name: Daily PR Reports
 
 on:
   schedule:

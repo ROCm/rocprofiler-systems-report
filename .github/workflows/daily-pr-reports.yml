@@ -94,11 +94,16 @@ jobs:
         run: |
           mkdir -p public/reports
 
-          # copy static UI (index.html, dashboard pages)
-          cp -r docs/* public/ || true
+          # copy static UI (index.html, dashboard pages) but NOT old reports
+          cp docs/*.html public/ || true
 
-          # merge generated report HTML files into public/reports/
-          find artifacts -type f -path "*/docs/reports/*" -exec cp {} public/reports/ \;
+          # copy fresh report HTML files from artifacts
+          echo "=== Artifact structure ==="
+          find artifacts -type f
+          echo "=== Copying reports ==="
+          find artifacts -type f -name "*.html" -path "*/docs/reports/*" -exec cp -v {} public/reports/ \;
+          echo "=== Final public/ structure ==="
+          find public -type f
 
       - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v4

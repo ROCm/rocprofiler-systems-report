@@ -110,10 +110,10 @@
 
 <ul>
 <li><strong>Total PRs:</strong> 27</li>
-<li><strong>In Review:</strong> 1 non-draft PR passing CI and approved or awaiting review</li>
-<li><strong>CI Failures:</strong> 12 PRs with failing CI checks</li>
-<li><strong>Missing Tests:</strong> 2 PRs with source changes but no test updates</li>
-<li><strong>Stale (no recent activity):</strong> 0 PRs flagged as stale by the 3+ day threshold</li>
+<li><strong>In Review:</strong> 1 non-draft PR with passing CI and approval awaiting merge</li>
+<li><strong>CI Failures:</strong> 11 PRs with failing CI (across both needs-attention and draft categories)</li>
+<li><strong>Missing Tests:</strong> 4 PRs with source changes but no test updates</li>
+<li><strong>Stale:</strong> 0 PRs with no activity in 3+ days <em>(though several older PRs warrant attention — see below)</em></li>
 </ul>
 
 <blockquote>
@@ -125,82 +125,82 @@
 <h2>Key Highlights</h2>
 
 <ul>
-<li><strong>Ready to merge but CI blocked:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">rocm-systems#6432</a> is approved by two reviewers and has solid test coverage, but a test shard is failing — worth investigating whether it&#x27;s a flaky test or a real regression before merging.</li>
-<li><strong>Approved PRs still blocked by CI:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">rocm-systems#6373</a> and <a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">rocm-systems#6270</a> are both approved and have good test coverage, but are blocked by <code>pre-commit</code> and hardware test failures respectively. These are close to the finish line and should be prioritized.</li>
-<li><strong>Sprint integration PR accumulating failures:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">rocm-systems#6341</a> (<code>Q2 Sprint 3 May 25 - Jun 12</code>) is a 6-day-old sprint aggregation PR targeting <code>develop</code> with CI failures in <code>rocprofiler-sdk</code> tests — a sprint PR failure warrants prompt investigation to avoid blocking downstream merges.</li>
-<li><strong>Long-running open PRs need attention:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">rocm-systems#4008</a> (75 days old, changes requested, 11 failing checks) and <a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">rocm-systems#1793</a> (196 days old, approved but <code>rdc</code> CI failing) represent significant review debt and should either be resolved or closed.</li>
-<li><strong>Active PC sampling work:</strong> Three draft PRs (<a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">rocm-systems#6416</a>, <a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">rocm-systems#6390</a>, <a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">rocm-systems#6049</a>) plus one open PR (<a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">rocm-systems#5482</a>) are all touching PC sampling infrastructure simultaneously — potential for merge conflicts or integration issues.</li>
+<li><strong>Ready to merge but blocked by CI:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6397" target="_blank">rocm-systems#6397</a> is approved and passing CI — it appears ready to land. Similarly, <a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">rocm-systems#6373</a> is approved but failing only on <code>pre-commit</code>, a low-friction fix that should unblock it quickly.</li>
+<li><strong>Approved PRs with failing CI:</strong> Three non-draft PRs — <a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">rocm-systems#6432</a>, <a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">rocm-systems#6270</a>, and <a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">rocm-systems#6373</a> — are fully approved but blocked on CI. These are the highest-priority fixes to unblock.</li>
+<li><strong>Long-lived open PR requiring escalation:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">rocm-systems#1793</a> has been open for <strong>197 days</strong> with an approval but a failing <code>rdc</code> CI check. <a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">rocm-systems#4008</a> (75 days) has changes requested and 11 failing checks across multiple platforms, indicating it may need a significant rebase or rework.</li>
+<li><strong>Sprint integration PR pending review:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">rocm-systems#6341</a> is the Q2 Sprint 3 integration PR targeting <code>develop</code>, has been open 6 days with no review yet, and carries CI failures that touch <code>rocprofiler-sdk</code> tests — worth prioritizing for review given its breadth (15 source files).</li>
+<li><strong>PC sampling work is fragmented across multiple PRs:</strong> At least four PRs relate to PC sampling (<a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">rocm-systems#6416</a>, <a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">rocm-systems#6390</a>, <a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">rocm-systems#6049</a>, <a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">rocm-systems#5482</a>), and several have a dependency chain — reviewing them together in sequence would reduce re-review churn.</li>
 </ul>
 
 <hr>
 
 <h2>PR Breakdown</h2>
 
-<h3>Needs Attention (12)</h3>
+<h3>Needs Attention (11)</h3>
 
 <p>PRs with failing CI or changes requested.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Failing Checks / Blocker</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">rocm-systems#6432</a></td><td>Fix get_num_dies KeyError for single-die GPUs</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>Approved (feizheng10, vedithal-amd)</td><td>TheRock CI Summary; Test rocprofiler-compute shard 1/2</td><td>2026-05-27</td><td>0d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6403" target="_blank">rocm-systems#6403</a></td><td>Remove config_delta and arch promotion workflow</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>Pending</td><td>TheRock CI Summary; Test rocprofiler-compute shard 2/2</td><td>2026-05-26</td><td>1d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">rocm-systems#6373</a></td><td>Skip analyze of unprofiled blocks</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>Approved (prbasyal-amd)</td><td>pre-commit</td><td>2026-05-26</td><td>5d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">rocm-systems#6341</a></td><td>Q2 Sprint 3 May 25 - Jun 12</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>Pending</td><td>TheRock CI Summary; Test rocprofiler-sdk shard 1/1</td><td>2026-05-26</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">rocm-systems#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>Approved (xuchen-amd)</td><td>TheRock CI Summary; Test rocprofiler-compute shard 1/2; Ubuntu 22.04 gfx950; Ubuntu 22.04 gfx1151</td><td>2026-05-25</td><td>7d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">rocm-systems#6247</a></td><td>Sync metrics docs data and drop SingleQuotedScalarString</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>Changes requested (vedithal-amd)</td><td>TheRock CI Summary; Test rocprofiler-compute shard 2/2; + missing tests 🚨</td><td>2026-05-27</td><td>7d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">rocm-systems#6235</a></td><td>Clarify gfx950 L2-Fabric and destination bandwidth metric descriptions</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>Changes requested (vedithal-amd)</td><td>TheRock CI Summary; Test rocprofiler-compute shard 2/2</td><td>2026-05-27</td><td>7d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6113" target="_blank">rocm-systems#6113</a></td><td>Improvements in marker injection for torch-trace</td><td><a href="https://github.com/ggottipa-amd" target="_blank">@ggottipa-amd</a></td><td>✅</td><td>Changes requested (vedithal-amd)</td><td>Review changes requested</td><td>2026-05-26</td><td>12d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">rocm-systems#5482</a></td><td>Support for code objects tracing in native collector</td><td><a href="https://github.com/svolkov-amd" target="_blank">@svolkov-amd</a></td><td>❌</td><td>Pending</td><td>TheRock CI Summary; Test rocprofiler-compute shard 1/2 &amp; 2/2; no reviewers assigned</td><td>2026-05-26</td><td>29d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>⚠️ unknown</td><td>Changes requested (dgaliffiAMD)</td><td>CI status unknown; changes requested; 14 days since update</td><td>2026-05-12</td><td>33d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">rocm-systems#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>❌</td><td>Changes requested (MythreyaK)</td><td>11 failing checks including TheRock, SDK/compute tests, hardware jobs, source; 14 days since update</td><td>2026-05-12</td><td>75d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">rocm-systems#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>❌</td><td>Approved (marifamd, dayatsin-amd)</td><td>rdc CI check failing; 14 days since update</td><td>2026-05-12</td><td>196d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">#6432</a></td><td>Fix get_num_dies KeyError for single-die GPUs</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>✅ Approved (feizheng10, vedithal-amd)</td><td>TheRock CI Summary; rocprofiler-compute shard 1</td><td>2026-05-27</td><td>0d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6403" target="_blank">#6403</a></td><td>Remove config_delta and arch promotion workflow</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>⏳ Pending</td><td>TheRock CI Summary; rocprofiler-compute shard 2</td><td>2026-05-26</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">#6373</a></td><td>Skip analyze of unprofiled blocks</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>✅ Approved (prbasyal-amd)</td><td>pre-commit only</td><td>2026-05-26</td><td>5d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">#6341</a></td><td>Q2 Sprint 3 May 25 - Jun 12</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>⏳ Pending</td><td>TheRock CI Summary; rocprofiler-sdk shard 1</td><td>2026-05-26</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>✅ Approved (xuchen-amd)</td><td>TheRock CI Summary; shard 1; gfx950; gfx1151</td><td>2026-05-25</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">#6247</a></td><td>Sync metrics docs data and drop SingleQuotedScalarString</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>⏳</td><td>⚠️ Changes Requested (vedithal-amd)</td><td>Changes requested + missing tests</td><td>2026-05-27</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6113" target="_blank">#6113</a></td><td>Improvements in marker injection for torch-trace</td><td><a href="https://github.com/ggottipa-amd" target="_blank">@ggottipa-amd</a></td><td>⏳</td><td>⚠️ Changes Requested (vedithal-amd)</td><td>Build, gfx950, pre-commit; changes requested</td><td>2026-05-27</td><td>12d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">#5482</a></td><td>Support for code objects tracing in native collector</td><td><a href="https://github.com/svolkov-amd" target="_blank">@svolkov-amd</a></td><td>❌</td><td>⏳ Pending</td><td>TheRock CI Summary; compute shards 1 &amp; 2</td><td>2026-05-26</td><td>30d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>⚠️ Unknown</td><td>⚠️ Changes Requested (dgaliffiAMD)</td><td>Changes requested; no CI status</td><td>2026-05-12</td><td>33d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>❌</td><td>⚠️ Changes Requested (MythreyaK)</td><td>11 failing checks across multiple platforms</td><td>2026-05-12</td><td>75d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>❌</td><td>✅ Approved (marifamd, dayatsin-amd)</td><td><code>rdc</code> check failing</td><td>2026-05-12</td><td>197d</td></tr>
 </tbody></table>
 
 <hr>
 
 <h3>In Review (1)</h3>
 
-<p>Passing CI, approved or awaiting review.</p>
+<p>Passing CI, approved — healthiest PRs, ready to merge.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6397" target="_blank">rocm-systems#6397</a></td><td>docs(rocprofiler-compute): add pip install instructions for <code>rocm[profiler]</code></td><td><a href="https://github.com/peterjunpark" target="_blank">@peterjunpark</a></td><td>✅</td><td>Approved (vedithal-amd)</td><td>2026-05-25</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6397" target="_blank">#6397</a></td><td>docs: add pip install instructions for <code>rocm[profiler]</code></td><td><a href="https://github.com/peterjunpark" target="_blank">@peterjunpark</a></td><td>✅</td><td>✅ Approved (vedithal-amd)</td><td>2026-05-25</td><td>1d</td></tr>
 </tbody></table>
 
 <hr>
 
 <h3>In Progress (1)</h3>
 
-<p>Active work, CI running.</p>
+<p>Active work with CI running.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6234" target="_blank">rocm-systems#6234</a></td><td>Cache ROCPROF_* env vars to fix shell-script profiling crash</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>⏳</td><td>Pending</td><td>2026-05-27</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6234" target="_blank">#6234</a></td><td>Cache ROCPROF_* env vars to fix shell-script profiling crash</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>⏳</td><td>⏳ Pending</td><td>2026-05-27</td><td>8d</td></tr>
 </tbody></table>
 
 <hr>
 
-<h3>Drafts (13)</h3>
+<h3>Drafts (14)</h3>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">rocm-systems#6416</a></td><td>PC sampling: route through native tool in profile mode</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>⏳ (some ❌)</td><td>0d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6395" target="_blank">rocm-systems#6395</a></td><td>Remove gfx950 bandwidth requests metrics</td><td><a href="https://github.com/jamessiddeley-amd" target="_blank">@jamessiddeley-amd</a></td><td>✅</td><td>1d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">rocm-systems#6390</a></td><td>PC sampling collector: code-object dump + review fixes</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>1d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6386" target="_blank">rocm-systems#6386</a></td><td>replace glob.glob with pathlib (PTH)</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>✅</td><td>2d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6345" target="_blank">rocm-systems#6345</a></td><td>Add hardcoded-secret pre-commit hook</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6333" target="_blank">rocm-systems#6333</a></td><td>parametrize analyze workload tests</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6189" target="_blank">rocm-systems#6189</a></td><td>Reorganize tests into unit and integration</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>10d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6086" target="_blank">rocm-systems#6086</a></td><td>Make rocpd database output the default profiling format</td><td><a href="https://github.com/jamessiddeley-amd" target="_blank">@jamessiddeley-amd</a></td><td>✅</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">rocm-systems#6049</a></td><td>Gate PC sampling behind --pc-sampling --experimental</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>✅</td><td>14d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5668" target="_blank">rocm-systems#5668</a></td><td>Add gfx1150 test coverage</td><td><a href="https://github.com/jbonnell-amd" target="_blank">@jbonnell-amd</a></td><td>❌</td><td>26d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5573" target="_blank">rocm-systems#5573</a></td><td>support of gfx1152 metrics with all public counters</td><td><a href="https://github.com/ywang103-amd" target="_blank">@ywang103-amd</a></td><td>❌</td><td>28d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5499" target="_blank">rocm-systems#5499</a></td><td>remove explicit pop from yaml</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>29d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">rocm-systems#2599</a></td><td>Enhance Lintian Support - add feature toggling build flag</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>❌</td><td>133d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">#6416</a></td><td>Extract PC sampling profile into standalone module</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>⏳ + ❌ partial</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6395" target="_blank">#6395</a></td><td>Remove gfx950 bandwidth requests metrics</td><td><a href="https://github.com/jamessiddeley-amd" target="_blank">@jamessiddeley-amd</a></td><td>✅</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">#6390</a></td><td>PC sampling collector: code-object dump + review fixes</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>2d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6386" target="_blank">#6386</a></td><td>replace glob.glob with pathlib (PTH)</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>✅</td><td>2d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6345" target="_blank">#6345</a></td><td>Add hardcoded-secret pre-commit hook</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6333" target="_blank">#6333</a></td><td>parametrize analyze workload tests</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">#6235</a></td><td>Clarify gfx950 L2-Fabric and destination bandwidth metric descriptions</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>❌</td><td>8d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6189" target="_blank">#6189</a></td><td>Reorganize tests into unit and integration</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>❌</td><td>10d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6086" target="_blank">#6086</a></td><td>Make rocpd database output the default profiling format</td><td><a href="https://github.com/jamessiddeley-amd" target="_blank">@jamessiddeley-amd</a></td><td>✅</td><td>13d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">#6049</a></td><td>Gate PC sampling behind --pc-sampling --experimental</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>✅</td><td>14d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5668" target="_blank">#5668</a></td><td>Add gfx1150 test coverage</td><td><a href="https://github.com/jbonnell-amd" target="_blank">@jbonnell-amd</a></td><td>❌</td><td>26d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5573" target="_blank">#5573</a></td><td>support of gfx1152 metrics with all public counters</td><td><a href="https://github.com/ywang103-amd" target="_blank">@ywang103-amd</a></td><td>❌</td><td>28d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5499" target="_blank">#5499</a></td><td>remove explicit pop from yaml</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>❌</td><td>29d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">#2599</a></td><td>Enhance Lintian Support - feature toggling build flag + ASAN fix</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>❌</td><td>133d</td></tr>
 </tbody></table>
 
 <hr>
@@ -212,37 +212,37 @@
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Failing Checks</th><th>Last Updated</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">rocm-systems#6432</a></td><td>Fix get_num_dies KeyError for single-die GPUs</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shard 1/2)</td><td>2026-05-27</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6403" target="_blank">rocm-systems#6403</a></td><td>Remove config_delta and arch promotion workflow</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shard 2/2)</td><td>2026-05-26</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">rocm-systems#6373</a></td><td>Skip analyze of unprofiled blocks</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>pre-commit</td><td>2026-05-26</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">rocm-systems#6341</a></td><td>Q2 Sprint 3 May 25 - Jun 12</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary, Test rocprofiler-sdk (shard 1/1)</td><td>2026-05-26</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">rocm-systems#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shard 1/2), Ubuntu 22.04 gfx950, Ubuntu 22.04 gfx1151</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">rocm-systems#6247</a></td><td>Sync metrics docs data and drop SingleQuotedScalarString</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shard 2/2)</td><td>2026-05-27</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">rocm-systems#6235</a></td><td>Clarify gfx950 L2-Fabric and destination bandwidth metric descriptions</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shard 2/2)</td><td>2026-05-27</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">rocm-systems#5482</a></td><td>Support for code objects tracing in native collector</td><td><a href="https://github.com/svolkov-amd" target="_blank">@svolkov-amd</a></td><td>TheRock CI Summary, Test rocprofiler-compute (shards 1/2 &amp; 2/2)</td><td>2026-05-26</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">rocm-systems#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>11 checks: TheRock, compute/SDK tests, hardware (gfx1151, gfx950, mi325 matrix), Code Coverage, source</td><td>2026-05-12</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">rocm-systems#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>rdc</td><td>2026-05-12</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">#6432</a></td><td>Fix get_num_dies KeyError for single-die GPUs</td><td><a href="https://github.com/xuchen-amd" target="_blank">@xuchen-amd</a></td><td>TheRock CI Summary; compute shard 1</td><td>2026-05-27</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6403" target="_blank">#6403</a></td><td>Remove config_delta and arch promotion workflow</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary; compute shard 2</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">#6373</a></td><td>Skip analyze of unprofiled blocks</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>pre-commit</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">#6341</a></td><td>Q2 Sprint 3 May 25 - Jun 12</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary; rocprofiler-sdk shard 1</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>TheRock CI Summary; compute shard 1; gfx950; gfx1151</td><td>2026-05-25</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">#5482</a></td><td>Support for code objects tracing in native collector</td><td><a href="https://github.com/svolkov-amd" target="_blank">@svolkov-amd</a></td><td>TheRock CI Summary; compute shards 1 &amp; 2</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>11 checks: TheRock, compute, sdk, gfx1151, gfx950, mi325 (4 OS), coverage, source</td><td>2026-05-12</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>rdc</td><td>2026-05-12</td></tr>
 </tbody></table>
 
 <blockquote>
-<p><strong>⚠️ 10/27 open PRs have CI failures.</strong> The <code>TheRock CI Summary</code> and <code>Test rocprofiler-compute</code> shards appear across many PRs — this may indicate a systemic CI issue affecting multiple branches simultaneously rather than individual PR regressions. Worth checking if the shared test infrastructure is healthy.</p>
+<p><strong>11/27 PRs have CI failures.</strong> Notable pattern: <code>TheRock CI Summary</code> and <code>rocprofiler-compute</code> test shards appear as the most common failing checks, suggesting possible systemic test instability in the shared CI pipeline rather than purely PR-specific failures. <a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">#6432</a> and <a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">#6270</a> are approved and should be prioritized for CI investigation.</p>
 </blockquote>
 
 <hr>
 
 <h3>Test Gap Summary</h3>
 
-<p>🚨 2 PRs have source changes without corresponding test updates.</p>
+<p>4 PRs have source changes without corresponding test updates.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Source Files Changed</th><th>Recommended Test Level</th><th>Risk of No Tests</th><th>Suggested Action</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">rocm-systems#6247</a></td><td>Sync metrics docs data and drop SingleQuotedScalarString</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td><code>metric_description_manager.py</code></td><td>Unit</td><td>Medium — existing feature change to a manager class handling metric descriptions</td><td>Add unit tests for <code>metric_description_manager.py</code>; check for an adjacent <code>test_metric_description_manager.py</code> or extend <code>test_metric_utils.py</code></td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">rocm-systems#2599</a></td><td>Enhance Lintian Support - add feature toggling build flag</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>11 <code>utils.cmake</code> / <code>rocprofiler_utils.cmake</code> files</td><td>Integration</td><td>Medium — build system changes can silently break packaging without test coverage</td><td>Add CMake integration tests or a packaging smoke test; review if existing <code>CMakeLists.txt</code> test targets can validate the new build flag</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">#6247</a></td><td>Sync metrics docs data and drop SingleQuotedScalarString</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td><code>metric_description_manager.py</code></td><td>Unit</td><td>Medium — changes metric description logic</td><td>Add unit tests for <code>metric_description_manager.py</code>; check if <code>test_metric_utils.py</code> can be extended</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">#6416</a></td><td>Extract PC sampling profile into standalone module</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td><code>pc_sampling_profiler.py</code>, <code>profiler_base.py</code>, <code>utils_profile.py</code></td><td>Integration</td><td>High — new standalone module extraction with no tests</td><td>Create <code>test_pc_sampling_profiler.py</code>; extend <code>test_profile_general.py</code> for the new module boundary</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">#6235</a></td><td>Clarify gfx950 L2-Fabric and destination bandwidth metric descriptions</td><td><a href="https://github.com/abchoudh-amd" target="_blank">@abchoudh-amd</a></td><td><code>metric_description_manager.py</code></td><td>Unit</td><td>Medium — correctness of metric descriptions affects analysis output</td><td>Extend <code>test_metric_utils.py</code> to assert on gfx950 L2-Fabric description strings</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">#2599</a></td><td>Enhance Lintian Support - feature toggling build flag + ASAN fix</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>11 × <code>utils.cmake</code> / <code>rocprofiler_utils.cmake</code></td><td>System</td><td>Medium — build system changes can silently break packaging</td><td>Add a CMake test or CI packaging smoke-test for the new Lintian flag; no adjacent test file is obvious</td></tr>
 </tbody></table>
 
 <blockquote>
-<p><strong>18 PRs include test updates. 2 PRs are missing tests.</strong></p>
+<p><strong>18 PRs include test updates. 4 PRs are missing tests.</strong> Note that <a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">#6247</a> and <a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">#6235</a> both touch <code>metric_description_manager.py</code> and are from the same author — they may share a test gap that can be addressed together.</p>
 </blockquote>
 
 <hr>
@@ -251,14 +251,14 @@
 
 <h3>Stale (25+ days no activity)</h3>
 
-<p>The following PRs have not been updated in 14+ days and represent longer-running open work:</p>
+<p>No PRs meet the automated stale threshold (3+ days no update). However, the following older PRs have had <strong>no activity in 14+ days</strong> and warrant manual attention:</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Last Updated</th><th>Age</th><th>Recommendation</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">rocm-systems#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>2026-05-12</td><td>75d</td><td>11 failing CI checks + changes requested by <a href="https://github.com/MythreyaK" target="_blank">@MythreyaK</a> with no response in 14 days — ping author to address review feedback or consider closing and re-opening when ready.</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>2026-05-12</td><td>33d</td><td>Changes requested by <a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a> with no update in 14 days; CI status unknown — ping author to resolve the change request and re-run CI.</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">rocm-systems#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>2026-05-12</td><td>196d</td><td>Approved by two reviewers but blocked by a single <code>rdc</code> CI failure for 196 days — this is a documentation-only fix; investigate if the <code>rdc</code> failure is a known flake and expedite merge or close in favour of a fresh PR.</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/1793" target="_blank">#1793</a></td><td>[NFC] Fix stale hyperlinks in rocm-systems</td><td><a href="https://github.com/saiislam" target="_blank">@saiislam</a></td><td>2026-05-12</td><td>197d</td><td>⚠️ Near-ancient PR; approved but blocked on <code>rdc</code> CI. Ping author to investigate the <code>rdc</code> failure or consider splitting the PR to exclude that component.</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4008" target="_blank">#4008</a></td><td>[rocprofv3] Output flag (-o) bug fix with multiple processes</td><td><a href="https://github.com/itrowbri" target="_blank">@itrowbri</a></td><td>2026-05-12</td><td>75d</td><td>⚠️ 11 CI failures and changes requested — needs a significant rebase. Ping author to rebase and address reviewer feedback or close and re-open when ready.</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>2026-05-12</td><td>33d</td><td>Ping author and <code>dgaliffiAMD</code> to resolve the changes-requested comment — this is a documentation-only PR that should be simple to close out.</td></tr>
 </tbody></table>
 
 <h3>Going Stale (3–24 days no activity)</h3>
@@ -266,9 +266,9 @@
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">rocm-systems#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>2026-05-25</td><td>7d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5573" target="_blank">rocm-systems#5573</a></td><td>support of gfx1152 metrics with all public counters</td><td><a href="https://github.com/ywang103-amd" target="_blank">@ywang103-amd</a></td><td>2026-05-08</td><td>28d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">rocm-systems#2599</a></td><td>Enhance Lintian Support - add feature toggling build flag</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>2026-05-14</td><td>133d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">#6270</a></td><td>Restrict profiler env-var debug logs to delta</td><td><a href="https://github.com/vedithal-amd" target="_blank">@vedithal-amd</a></td><td>2026-05-25</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5573" target="_blank">#5573</a></td><td>support of gfx1152 metrics with all public counters</td><td><a href="https://github.com/ywang103-amd" target="_blank">@ywang103-amd</a></td><td>2026-05-08</td><td>28d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">#2599</a></td><td>Enhance Lintian Support</td><td><a href="https://github.com/arvindcheru" target="_blank">@arvindcheru</a></td><td>2026-05-14</td><td>133d</td></tr>
 </tbody></table>
 
 <hr>
@@ -276,23 +276,23 @@
 <h2>LLM Observations</h2>
 
 <ul>
-<li><strong>PC sampling is a hotspot with potential merge conflicts.</strong> Four PRs are simultaneously working in the PC sampling space: <a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">rocm-systems#6416</a> (route through native tool), <a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">rocm-systems#6390</a> (code-object dump), <a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">rocm-systems#6049</a> (UX gating), and <a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">rocm-systems#5482</a> (code objects tracing in native collector). These PRs share files like <code>code_object_writer.cpp/h</code>, <code>env_parameters.cpp/h</code>, and <code>counters_writer.cpp/h</code> — a merge ordering plan is advisable to avoid cascading conflicts.</li>
+<li><strong>PC sampling is the most active and complex work area.</strong> At least four PRs touch PC sampling functionality: <a href="https://github.com/ROCm/rocm-systems/pull/6416" target="_blank">#6416</a> (Python module extraction), <a href="https://github.com/ROCm/rocm-systems/pull/6390" target="_blank">#6390</a> (code-object dump), <a href="https://github.com/ROCm/rocm-systems/pull/6049" target="_blank">#6049</a> (UX gating), and <a href="https://github.com/ROCm/rocm-systems/pull/5482" target="_blank">#5482</a> (native collector code objects). These PRs likely have overlapping file scopes (e.g., <code>pc_sampling_collector.cpp</code>, <code>code_object_writer.cpp</code>) and should be reviewed in dependency order to avoid merge conflicts.</li>
 </ul>
 
 <ul>
-<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">rocm-systems#6235</a> targets <a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">rocm-systems#6247</a> as its base branch.</strong> Since both are in <code>needs_attention</code> with changes requested, the child PR (#6235) is blocked until the parent (#6247) is resolved and merged. These should be reviewed and unblocked in sequence — #6247 first.</li>
+<li><strong><code>metric_description_manager.py</code> is touched by two separate PRs with no test coverage.</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">#6247</a> and <a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">#6235</a> (the latter a draft targeting the former&#x27;s branch) both modify this file and both lack test files. The chained branch target (<code>#6235</code> → <code>users/abchoudh/doc_sync</code> → <code>rocprofiler-compute-develop</code>) creates a review dependency: <a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">#6247</a> must land before <a href="https://github.com/ROCm/rocm-systems/pull/6235" target="_blank">#6235</a> can be rebased.</li>
 </ul>
 
 <ul>
-<li><strong>The <code>rocprofiler-compute-develop</code> → <code>develop</code> accumulation PR (<a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">rocm-systems#6341</a>) is a natural integration risk.</strong> It aggregates 15 source files and 6 test files across the sprint, and its CI is failing on <code>rocprofiler-sdk</code> tests — not <code>rocprofiler-compute</code>. This cross-component failure may be inherited from a dependency rather than a bug in the sprint work itself, and warrants investigation before the sprint deadline of Jun 12.</li>
+<li><strong>Three approved PRs are blocked only by fixable CI issues.</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6432" target="_blank">#6432</a> (test shard failure), <a href="https://github.com/ROCm/rocm-systems/pull/6270" target="_blank">#6270</a> (multi-platform failure), and <a href="https://github.com/ROCm/rocm-systems/pull/6373" target="_blank">#6373</a> (<code>pre-commit</code> only) are all approved. Given that <code>TheRock CI Summary</code> failures appear across multiple unrelated PRs simultaneously, some of these may reflect infrastructure noise rather than real regressions — worth checking if the CI failures are correlated.</li>
 </ul>
 
 <ul>
-<li><strong>Test infrastructure refactor (<a href="https://github.com/ROCm/rocm-systems/pull/6189" target="_blank">rocm-systems#6189</a>) may be a prerequisite for several other draft PRs.</strong> The &quot;Reorganize tests into unit and integration&quot; draft touches test scaffolding that overlaps with parametrize workload tests (<a href="https://github.com/ROCm/rocm-systems/pull/6333" target="_blank">rocm-systems#6333</a>). If #6189 lands first with breaking changes to test layout, #6333 will need a rebase. Coordinating merge order is recommended.</li>
+<li><strong>The Q2 Sprint 3 integration PR <a href="https://github.com/ROCm/rocm-systems/pull/6341" target="_blank">#6341</a> is accumulating drift.</strong> At 6 days old targeting <code>develop</code> from <code>rocprofiler-compute-develop</code>, it bundles 15 source files spanning <code>soc_gfx1150.py</code>, <code>soc_gfx1152.py</code>, <code>argparser.py</code>, <code>analysis_tui.py</code> and more. Several of the feature PRs above (e.g., <a href="https://github.com/ROCm/rocm-systems/pull/6403" target="_blank">#6403</a>) also target <code>rocprofiler-compute-develop</code>, meaning delays in landing those may cause the sprint PR to drift further before review.</li>
 </ul>
 
 <ul>
-<li><strong>Positive trend: test coverage is strong across active PRs.</strong> Of the 12 PRs needing attention, 10 include test file updates. The two gaps (<a href="https://github.com/ROCm/rocm-systems/pull/6247" target="_blank">rocm-systems#6247</a> and <a href="https://github.com/ROCm/rocm-systems/pull/2599" target="_blank">rocm-systems#2599</a>) are relatively targeted — one is a docs/data sync and the other is a build system change — suggesting the team has a healthy culture of pairing code changes with tests.</li>
+<li><strong>Test infrastructure is itself under active refactoring.</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6189" target="_blank">#6189</a> (reorganize tests into unit/integration) and <a href="https://github.com/ROCm/rocm-systems/pull/6333" target="_blank">#6333</a> (parametrize analyze workload tests) are both drafts with failing CI. If these land before other feature PRs add tests, the new test structure will need to be followed — coordinating the order of these merges will reduce future churn.</li>
 </ul>
 
 <hr>
@@ -305,14 +305,14 @@
 <tr><th>Metric</th><th>Count</th></tr>
 </thead><tbody>
 <tr><td>Total open PRs</td><td>27</td></tr>
-<tr><td>Needs attention (failing CI or changes requested)</td><td>12</td></tr>
+<tr><td>Needs attention (failing CI or changes requested)</td><td>11</td></tr>
 <tr><td>Healthy / In review</td><td>1</td></tr>
 <tr><td>In progress (CI running)</td><td>1</td></tr>
-<tr><td>Stale (3+ days no activity)</td><td>0 <em>(per threshold; see Going Stale section for longer-idle PRs)</em></td></tr>
-<tr><td>Drafts</td><td>13</td></tr>
-<tr><td>WIP not draft</td><td>0</td></tr>
+<tr><td>Stale (3+ days no activity)</td><td>0</td></tr>
+<tr><td>Drafts</td><td>14</td></tr>
+<tr><td>WIP-titled, not marked draft</td><td>0</td></tr>
 <tr><td>PRs with test updates</td><td>18</td></tr>
-<tr><td>PRs missing tests (source changes, no tests)</td><td>2</td></tr>
+<tr><td>PRs missing tests (source changes, no tests)</td><td>4</td></tr>
 </tbody></table>
 
 <h3>Quick Links</h3>

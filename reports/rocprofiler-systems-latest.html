@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily PR Report — 2026-05-25</title>
+<title>Daily PR Report — 2026-05-27</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -98,7 +98,7 @@
 </style>
 </head>
 <body>
-<h1>Daily PR Report — 2026-05-25</h1>
+<h1>Daily PR Report — 2026-05-27</h1>
 
 <blockquote>
 <p>rocprofiler-systems · <a href="https://github.com/ROCm/rocm-systems" target="_blank">ROCm/rocm-systems</a> · label: <code>project: rocprofiler-systems</code></p>
@@ -109,11 +109,11 @@
 <h2>Executive Summary</h2>
 
 <ul>
-<li><strong>Total PRs:</strong> 40</li>
-<li><strong>In Review:</strong> 4 non-draft PRs with passing CI (approved or awaiting review)</li>
-<li><strong>CI Failures:</strong> 13 PRs with failing CI (across needs-attention and draft categories)</li>
-<li><strong>Missing Tests:</strong> 9 PRs with source changes but no test updates</li>
-<li><strong>Stale:</strong> 3 PRs with 3+ days no activity (non-draft); several drafts also dormant 13–19 days</li>
+<li><strong>Total PRs:</strong> 42</li>
+<li><strong>In Review:</strong> 6 non-draft PRs passing CI and awaiting or with review decisions</li>
+<li><strong>CI Failures:</strong> 10 PRs with failing CI checks</li>
+<li><strong>Missing Tests:</strong> 10 PRs with source changes but no test updates</li>
+<li><strong>Stale:</strong> 1 PR with 3+ days no activity (external contribution, 41 days old)</li>
 </ul>
 
 <p><em>This is the first report — no overnight delta available.</em></p>
@@ -123,92 +123,100 @@
 <h2>Key Highlights</h2>
 
 <ul>
-<li><strong>Three PRs are approved and ready to merge</strong> but are blocked by CI failures: <a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a> (version bump 1.7.0, one jammy failure), <a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a> (XGMI PMC names, one rocprofiler-compute test failure), and <a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a> (AI NIC Pensando Phase 2, one noble build failure). All three have approvals and should be unblocked as soon as their single failing checks are resolved.</li>
-<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a> (CLR/HRR capture and playback)</strong> is 24 days old, has changes requested by <code>stellaraccident</code>, is missing tests across 20 source files, and CI is still running/failing. This cross-project PR (also touching <code>clr</code>, <code>hip-tests</code>, <code>rccl</code>) is the most complex and highest-risk open PR in the queue.</li>
-<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a> (C++20 support)</strong> is 70 days old — the oldest active (non-draft) PR — with failing CI and no review decision. It is the base for a chain of dependent PRs (#5992, #5995) that are also failing, suggesting a compounding integration risk.</li>
-<li><strong><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a> (rocpd API versioning)</strong> is 33 days old with changes requested and a failing code-coverage check. The author has no requested reviewers currently assigned, which may be slowing resolution.</li>
-<li><strong>Two newly opened PRs today</strong>: <a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a> (pthread_mutex_gotcha fix) and draft <a href="https://github.com/ROCm/rocm-systems/pull/6387" target="_blank">rocm-systems#6387</a> (UMP metric rename) — both with immediate CI failures that need investigation.</li>
+<li><strong>Ready to merge:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6236" target="_blank">rocm-systems#6236</a> (env_vars refactor) and <a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a> (AI NIC Pensando Phase 2) are both approved with passing CI — these are the clearest merge candidates today.</li>
+<li><strong>Long-running C++20 migration chain at risk:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a> (72 days old, failing CI), <a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a> (15 days, failing on RHEL 8.10), and <a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a> (15 days, widespread CI failure, no tests) form a stacked dependency chain that is blocking progress and accumulating risk.</li>
+<li><strong>Large infrastructure PR stalled:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a> (Replace SQLite3/rocpd with rocprofiler-hub, 20 days old) has failing build CI and no review decision despite 3 requested reviewers — this is a significant backend change that needs triage.</li>
+<li><strong>External contribution going unreviewed:</strong> <a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a> (clr/hrr capture and playback, 26 days old) has changes requested, failing Linux tests, 20 source files changed, and zero test files — a substantial PR that needs active attention.</li>
+<li><strong>Active development pulse is healthy:</strong> 7 in-progress PRs and 18 drafts indicate strong ongoing work; several drafts from <a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a> touch overlapping areas (argparse, output summary, control logic unification) that may benefit from coordinated review.</li>
 </ul>
 
 <hr>
 
 <h2>PR Breakdown</h2>
 
-<h3>Needs Attention (13)</h3>
+<h3>Needs Attention (10)</h3>
 
 <p>PRs with failing CI or changes requested.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Failing Checks / Blocker</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a></td><td>Fix pthread_mutex_gotcha roctx pause resume</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>❌</td><td>Awaiting review</td><td>TheRock CI Summary; rocprofiler-systems test shard 1</td><td>2026-05-25</td><td>0d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a></td><td>Update version to 1.7.0</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>❌</td><td>✅ Approved (adjordje-amd)</td><td>ubuntu-jammy (g++, Release, 7.2)</td><td>2026-05-25</td><td>5d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>Awaiting review</td><td>33 checks across debian/noble/jammy/rhel/sanitizers/TheRock</td><td>2026-05-12</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>Awaiting review</td><td>rhel g++ 8.10 (all ROCm versions)</td><td>2026-05-15</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names across emit and register sites</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>✅ Approved (mradosav-amd)</td><td>TheRock CI; rocprofiler-compute test shard 1</td><td>2026-05-11</td><td>19d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a></td><td>Replace SQLite3/rocpd backend with rocprofiler-hub library</td><td><a href="https://github.com/anujshuk-amd" target="_blank">@anujshuk-amd</a></td><td>❌</td><td>Pending</td><td>TheRock CI; Linux Build Linux Packages</td><td>2026-05-25</td><td>19d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a></td><td>AI NIC changes for Pensando Phase 2</td><td><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a></td><td>❌</td><td>✅ Approved (dgaliffiAMD)</td><td>ubuntu-noble (g++, Release, 7.0)</td><td>2026-05-21</td><td>20d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>⏳</td><td>⚠️ Changes requested (stellaraccident)</td><td>Linux Build Linux Packages failing; Windows build in progress</td><td>2026-05-25</td><td>24d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5351" target="_blank">rocm-systems#5351</a></td><td>[runtime-instrument] Introduce 3 CLI options and rework some code</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>❌</td><td>Pending</td><td>ubuntu-noble-sanitizers address; TheRock CI; rocprofiler-compute test shard 2</td><td>2026-05-07</td><td>32d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>⚠️ Unknown</td><td>⚠️ Changes requested (dgaliffiAMD)</td><td>Changes requested by dgaliffiAMD; CI status unknown</td><td>2026-05-12</td><td>32d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a></td><td>[rocpd] Update rocprofiler-sdk-rocpd api to support versioning</td><td><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a></td><td>❌</td><td>⚠️ Changes requested (jrmadsen)</td><td>Code Coverage mi325 ubuntu-22.04; changes requested</td><td>2026-05-25</td><td>33d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4993" target="_blank">rocm-systems#4993</a></td><td>Add hip graph tests</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅</td><td>⚠️ Changes requested (kcossett-amd)</td><td>Changes requested by kcossett-amd</td><td>2026-05-19</td><td>41d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>Pending</td><td>TheRock CI; rocprofiler-systems test shard 1</td><td>2026-05-19</td><td>70d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6355" target="_blank">rocm-systems#6355</a></td><td>[tests] Apply strict <code>kwargs</code> checks and fix certain tests</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>❌ failing</td><td>Pending</td><td>TheRock CI Summary; rocprofiler-compute test shard 2</td><td>2026-05-26</td><td>5d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>Unknown</td><td>Widespread: 30+ checks failing across all distros; no tests added</td><td>2026-05-12</td><td>15d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>Unknown</td><td>RHEL 8.10 failures (all ROCm versions); 11 days no activity</td><td>2026-05-15</td><td>15d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names across emit and register sites</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>✅ Approved (mradosav-amd)</td><td>TheRock CI Summary; rocprofiler-compute shard 1; 15 days no activity</td><td>2026-05-11</td><td>20d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a></td><td>Replace SQLite3/rocpd backend with rocprofiler-hub library</td><td><a href="https://github.com/anujshuk-amd" target="_blank">@anujshuk-amd</a></td><td>❌ failing</td><td>Pending</td><td>TheRock CI Summary; Build Linux Packages failing</td><td>2026-05-25</td><td>20d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>⏳ in progress</td><td>⚠️ Changes requested (stellaraccident)</td><td>6 Linux hip-test shards failing; 20 source files, 0 tests; changes requested</td><td>2026-05-26</td><td>26d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>⚠️ unknown</td><td>⚠️ Changes requested (dgaliffiAMD)</td><td>CI status unknown; changes requested; 14 days no activity</td><td>2026-05-12</td><td>33d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a></td><td>[rocpd] Update rocprofiler-sdk-rocpd api to support versioning</td><td><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a></td><td>❌ failing</td><td>⚠️ Changes requested (jrmadsen)</td><td>Code Coverage mi325 ubuntu-22.04; changes requested by reviewer</td><td>2026-05-25</td><td>35d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4993" target="_blank">rocm-systems#4993</a></td><td>Add hip graph tests</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅ passing</td><td>⚠️ Changes requested (kcossett-amd)</td><td>Changes requested — author needs to address review feedback</td><td>2026-05-26</td><td>43d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>Pending</td><td>TheRock CI Summary; rocprofiler-systems test shard; 7 days no activity</td><td>2026-05-19</td><td>72d</td></tr>
 </tbody></table>
 
 <hr>
 
-<h3>In Review (4)</h3>
+<h3>In Review (6)</h3>
 
 <p>Passing CI, approved or awaiting review.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6349" target="_blank">rocm-systems#6349</a></td><td>Clean up jacobi-hip example</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>✅</td><td>✅ Approved (kcossett-amd, dgaliffiAMD)</td><td>2026-05-25</td><td>4d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6236" target="_blank">rocm-systems#6236</a></td><td>refactor(env_vars): use env_vars:: constants in place of ROCPROFSYS_* literals</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-25</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6035" target="_blank">rocm-systems#6035</a></td><td>docs: Update install instructions for 7.13</td><td><a href="https://github.com/peterjunpark" target="_blank">@peterjunpark</a></td><td>✅</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-25</td><td>12d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5214" target="_blank">rocm-systems#5214</a></td><td>Fix validation scripts to accept extra OMPT kernels from LLVM</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅</td><td>Pending</td><td>2026-05-25</td><td>34d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6387" target="_blank">rocm-systems#6387</a></td><td>refactor(trace-cache): rename UMP bandwidth metric</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>✅ passing</td><td>Pending</td><td>2026-05-27</td><td>2d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6236" target="_blank">rocm-systems#6236</a></td><td>refactor(env_vars): use env_vars:: constants in place of ROCPROFSYS_* literals</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅ passing</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-25</td><td>8d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6035" target="_blank">rocm-systems#6035</a></td><td>docs: Update install instructions for 7.13</td><td><a href="https://github.com/peterjunpark" target="_blank">@peterjunpark</a></td><td>✅ passing</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-25</td><td>14d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5867" target="_blank">rocm-systems#5867</a></td><td>Add OpenMP profiling doc</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>✅ passing</td><td>Pending</td><td>2026-05-26</td><td>19d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a></td><td>AI NIC changes for Pensando Phase 2</td><td><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a></td><td>✅ passing</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-26</td><td>21d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5214" target="_blank">rocm-systems#5214</a></td><td>Fix validation scripts to accept extra OMPT kernels from LLVM</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅ passing</td><td>Pending</td><td>2026-05-25</td><td>36d</td></tr>
 </tbody></table>
 
 <hr>
 
-<h3>In Progress (1)</h3>
+<h3>In Progress (7)</h3>
 
 <p>Active work, CI running.</p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Review Status</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6355" target="_blank">rocm-systems#6355</a></td><td>[tests] Apply strict <code>kwargs</code> checks and fix certain tests</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>⏳</td><td>Pending (32 jobs running)</td><td>2026-05-25</td><td>4d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6418" target="_blank">rocm-systems#6418</a></td><td>Fix grouping of settings in help topics</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>⏳ in progress</td><td>Unknown</td><td>2026-05-27</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6414" target="_blank">rocm-systems#6414</a></td><td>allow --gpus/--cpus/--ai-nics without --device/--host</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>⏳ in progress</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-27</td><td>1d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a></td><td>Fix pthread_mutex_gotcha roctx pause resume</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>⏳ in progress</td><td>Pending</td><td>2026-05-27</td><td>2d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6295" target="_blank">rocm-systems#6295</a></td><td>Update dyninst submodule &amp; fix asan build failures</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>⏳ in progress</td><td>✅ Approved (dgaliffiAMD)</td><td>2026-05-27</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a></td><td>Update version to 1.7.0</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>⏳ in progress</td><td>✅ Approved (adjordje-amd)</td><td>2026-05-25</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6237" target="_blank">rocm-systems#6237</a></td><td>Improve Generated Output summary. Cleanup of noisy logs</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>⏳ in progress ⚠️</td><td>Pending</td><td>2026-05-27</td><td>8d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6203" target="_blank">rocm-systems#6203</a></td><td>Replace get_env and set_env from timemory inside rocprofiler-systems</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>⏳ in progress</td><td>✅ Approved (marantic-amd)</td><td>2026-05-27</td><td>8d</td></tr>
 </tbody></table>
+
+<blockquote>
+<p>⚠️ <a href="https://github.com/ROCm/rocm-systems/pull/6237" target="_blank">rocm-systems#6237</a> has some checks already failing (<code>ubuntu-noble-system-deps (amdclang++)</code>, <code>ubuntu-jammy-system-deps (amdclang++)</code>) while build is still running.</p>
+</blockquote>
 
 <hr>
 
-<h3>Drafts (19)</h3>
+<h3>Drafts (18)</h3>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>CI</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6387" target="_blank">rocm-systems#6387</a></td><td>refactor(trace-cache): rename UMP bandwidth metric</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>❌</td><td>0d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6300" target="_blank">rocm-systems#6300</a></td><td>feat(rocprof-sys): add SPM beta scaffolding</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>❌</td><td>5d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a></td><td>refactor(rocprof-sys-causal): centralize runtime state</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>✅</td><td>5d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6295" target="_blank">rocm-systems#6295</a></td><td>Update dyninst submodule &amp; fix asan build failures</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>✅</td><td>5d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6254" target="_blank">rocm-systems#6254</a></td><td>Config Robustness: Negative Tests for Invalid Values</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>✅</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6243" target="_blank">rocm-systems#6243</a></td><td>Switch Perfetto processing in cached data to run in parallel</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6240" target="_blank">rocm-systems#6240</a></td><td>Unify control logic with different triggers</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>❌</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6116" target="_blank">rocm-systems#6116</a></td><td>Add <code>rocprofsys_push_trace_with_args</code> and cache region arguments</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>✅</td><td>11d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6057" target="_blank">rocm-systems#6057</a></td><td>Wall Clock migration from timemory</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅</td><td>12d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a></td><td>wire ccache (CMake auto-detect + CI cache)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6006" target="_blank">rocm-systems#6006</a></td><td>rocprofsys exception hierarchy + clean stacktrace</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5867" target="_blank">rocm-systems#5867</a></td><td>Add OpenMP profiling doc</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>✅</td><td>18d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">rocm-systems#5762</a></td><td>Add RHEL system deps workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>❌</td><td>20d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5736" target="_blank">rocm-systems#5736</a></td><td>Support ELF&#x27;s RELR relocation for binary rewrite</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>❌</td><td>21d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5414" target="_blank">rocm-systems#5414</a></td><td>Add pytest for rocprof-sys-attach (attach/detach/re-attach)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>✅</td><td>31d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5285" target="_blank">rocm-systems#5285</a></td><td>Argparser refactor</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅</td><td>33d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5254" target="_blank">rocm-systems#5254</a></td><td>Add clang-tidy in formatting workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>❌</td><td>33d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4769" target="_blank">rocm-systems#4769</a></td><td>Add initial strix halo changes for rocprofiler-systems CI</td><td><a href="https://github.com/jbonnell-amd" target="_blank">@jbonnell-amd</a></td><td>❌</td><td>48d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">rocm-systems#4620</a></td><td>Fix <code>update_env</code> handling of <code>REPLACE</code> mode</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>❌</td><td>54d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6459" target="_blank">rocm-systems#6459</a></td><td>Add note for data leak outside selected regions</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>✅ passing</td><td>0d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6445" target="_blank">rocm-systems#6445</a></td><td>[WIP] Unify elfutils discovery</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>❌ failing</td><td>0d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6430" target="_blank">rocm-systems#6430</a></td><td>[WIP] Fix <code>libelf</code> and <code>libdw</code> dependencies on TheRock builds</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>✅ passing</td><td>0d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6300" target="_blank">rocm-systems#6300</a></td><td>feat(rocprof-sys): add SPM beta scaffolding</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>❌ failing</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a></td><td>refactor(rocprof-sys-causal): centralize runtime state</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>✅ passing</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6254" target="_blank">rocm-systems#6254</a></td><td>Config Robustness: Negative Tests for Invalid Values</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>✅ passing</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6243" target="_blank">rocm-systems#6243</a></td><td>Switch Perfetto processing in cached data to run in parallel</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>⏳ in progress</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6240" target="_blank">rocm-systems#6240</a></td><td>Unify control logic with different triggers</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>❌ failing</td><td>8d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6116" target="_blank">rocm-systems#6116</a></td><td>Add <code>rocprofsys_push_trace_with_args</code> and cache region arguments/perfetto annotations</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>✅ passing</td><td>12d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6057" target="_blank">rocm-systems#6057</a></td><td>Wall Clock migration from timemory</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>✅ passing</td><td>14d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a></td><td>wire ccache (CMake auto-detect + CI cache)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>15d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6006" target="_blank">rocm-systems#6006</a></td><td>rocprofsys exception hierarchy + clean stacktrace</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>❌ failing</td><td>15d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">rocm-systems#5762</a></td><td>Add RHEL system deps workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>❌ failing</td><td>21d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5414" target="_blank">rocm-systems#5414</a></td><td>Add pytest for rocprof-sys-attach (attach/detach/re-attach)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>✅ passing</td><td>33d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5285" target="_blank">rocm-systems#5285</a></td><td>argparser refactor</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>✅ passing</td><td>35d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5254" target="_blank">rocm-systems#5254</a></td><td>Add clang-tidy in formatting workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>❌ failing</td><td>35d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4769" target="_blank">rocm-systems#4769</a></td><td>Add initial strix halo changes for rocprofiler-systems CI</td><td><a href="https://github.com/jbonnell-amd" target="_blank">@jbonnell-amd</a></td><td>❌ failing</td><td>49d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">rocm-systems#4620</a></td><td>Fix <code>update_env</code> handling of <code>REPLACE</code> mode</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>❌ failing</td><td>55d</td></tr>
 </tbody></table>
 
 <hr>
@@ -217,44 +225,42 @@
 
 <h3>CI Instability</h3>
 
-<p><strong>13/40 PRs have CI failures.</strong></p>
+<p><strong>10/42 PRs have CI failures.</strong></p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Failing Checks</th><th>Last Updated</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a></td><td>Fix pthread_mutex_gotcha roctx pause resume</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>TheRock CI Summary; rocprofiler-systems test shard 1</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a></td><td>Update version to 1.7.0</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>ubuntu-jammy (g++, Release, 7.2)</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>33 checks: debian/noble/jammy/rhel/sanitizers/TheRock/gfx950</td><td>2026-05-12</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>rhel g++ 8.10 (7.0, 6.4, 6.3, 7.2, 7.1)</td><td>2026-05-15</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>TheRock CI; rocprofiler-compute test shard 1</td><td>2026-05-11</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a></td><td>Replace SQLite3/rocpd backend with rocprofiler-hub</td><td><a href="https://github.com/anujshuk-amd" target="_blank">@anujshuk-amd</a></td><td>TheRock CI; Linux Build Linux Packages</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a></td><td>AI NIC changes for Pensando Phase 2</td><td><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a></td><td>ubuntu-noble (g++, Release, 7.0)</td><td>2026-05-21</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>Linux Build Linux Packages (+ Windows in progress)</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5351" target="_blank">rocm-systems#5351</a></td><td>[runtime-instrument] Introduce 3 CLI options</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>ubuntu-noble-sanitizers address; TheRock CI; rocprofiler-compute shard 2</td><td>2026-05-07</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a></td><td>[rocpd] Update rocprofiler-sdk-rocpd api to support versioning</td><td><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a></td><td>Code Coverage mi325 ubuntu-22.04</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>TheRock CI; rocprofiler-systems test shard 1</td><td>2026-05-19</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6387" target="_blank">rocm-systems#6387</a> <em>(draft)</em></td><td>refactor(trace-cache): rename UMP bandwidth metric</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>34 checks across all distros/sanitizers</td><td>2026-05-25</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">rocm-systems#4620</a> <em>(draft)</em></td><td>Fix <code>update_env</code> handling of <code>REPLACE</code> mode</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>32 checks across rhel/jammy/noble/debian/TheRock</td><td>2026-05-24</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>30+ checks: all distros (debian, ubuntu-noble, ubuntu-jammy, RHEL), build packages, sanitizers</td><td>2026-05-12</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>TheRock CI Summary; rocprofiler-systems test shard</td><td>2026-05-19</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5808" target="_blank">rocm-systems#5808</a></td><td>Replace SQLite3/rocpd backend with rocprofiler-hub library</td><td><a href="https://github.com/anujshuk-amd" target="_blank">@anujshuk-amd</a></td><td>TheRock CI Summary; Build Linux Packages</td><td>2026-05-25</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>TheRock CI Summary; rocprofiler-compute shard 1</td><td>2026-05-11</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>RHEL 8.10 (g++): ROCm 6.3, 6.4, 7.0, 7.1, 7.2</td><td>2026-05-15</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6355" target="_blank">rocm-systems#6355</a></td><td>Apply strict <code>kwargs</code> checks and fix certain tests</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>TheRock CI Summary; rocprofiler-compute shard 2</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5267" target="_blank">rocm-systems#5267</a></td><td>Update rocprofiler-sdk-rocpd api to support versioning</td><td><a href="https://github.com/yhuiYH" target="_blank">@yhuiYH</a></td><td>Code Coverage mi325 ubuntu-22.04</td><td>2026-05-25</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6237" target="_blank">rocm-systems#6237</a></td><td>Improve Generated Output summary. Cleanup of noisy logs</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>ubuntu-noble-system-deps (amdclang++); ubuntu-jammy-system-deps (amdclang++)</td><td>2026-05-27</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6445" target="_blank">rocm-systems#6445</a></td><td>[WIP] Unify elfutils discovery</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td>TheRock CI Summary; rocprofiler-sdk test; debian/ubuntu-noble builds; cmake</td><td>2026-05-26</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6240" target="_blank">rocm-systems#6240</a></td><td>Unify control logic with different triggers</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>27 checks: debian, RHEL, ubuntu-jammy, ubuntu-noble, python, fixedwidth-types</td><td>2026-05-25</td></tr>
 </tbody></table>
 
 <hr>
 
 <h3>Test Gap Summary</h3>
 
-<p><strong>23 PRs include test updates. 9 PRs are missing tests.</strong></p>
+<p><strong>25 PRs include test updates. 10 PRs are missing tests.</strong></p>
 
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Source Files Changed</th><th>Recommended Test Level</th><th>Risk of No Tests</th><th>Suggested Action</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6388" target="_blank">rocm-systems#6388</a></td><td>Fix pthread_mutex_gotcha roctx pause resume</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td><code>pthread_mutex_gotcha.cpp</code>, <code>pthread_mutex_gotcha.hpp</code></td><td>Unit</td><td><strong>High</strong> — bug fix in gotcha interception logic</td><td>Add unit test for pause/resume sequencing; check <code>tests/</code> for existing gotcha tests</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td><code>buffer_storage.cpp</code>, <code>buffer_storage.hpp</code></td><td>Unit + Integration</td><td><strong>High</strong> — threading model change in flush path</td><td>Add thread-lifecycle and flush-ordering tests; check <code>tests/trace_cache/</code></td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>20 files: <code>hip_capture<em>.cpp/h</code>, <code>hip_code_object.</em></code>, <code>hip_context.cpp</code>, generated files</td><td>System</td><td><strong>High</strong> — new major feature (capture/playback), 20 source files</td><td>Add end-to-end capture/playback tests; this is the highest-risk gap in the queue</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6116" target="_blank">rocm-systems#6116</a> <em>(draft)</em></td><td>Add <code>rocprofsys_push_trace_with_args</code></td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>13 files: <code>api.cpp/hpp</code>, <code>dl.cpp/hpp</code>, <code>module_function.<em></code>, <code>rocprof-sys-instrument.</em></code>, <code>main.c</code></td><td>Integration</td><td><strong>High</strong> — new public API surface</td><td>Add API-level tests for push_trace_with_args; look for existing <code>tests/library/</code> patterns</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a> <em>(draft)</em></td><td>refactor(rocprof-sys-causal): centralize runtime state</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td><code>impl.cpp</code>, <code>rocprof-sys-causal.cpp</code>, <code>rocprof-sys-causal.hpp</code></td><td>Unit</td><td><strong>Medium</strong> — internal refactor of runtime state</td><td>Add state-machine unit tests; check <code>tests/causal/</code> for extension points</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6295" target="_blank">rocm-systems#6295</a> <em>(draft)</em></td><td>Update dyninst submodule &amp; fix asan build failures</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td><code>Packages.cmake</code>, <code>markers.h</code></td><td>Integration</td><td><strong>Medium</strong> — submodule update may alter instrumentation behavior</td><td>Verify existing instrumentation tests pass; extend if markers.h semantics changed</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a> <em>(draft)</em></td><td>wire ccache (CMake auto-detect + CI cache)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td><code>BuildSettings.cmake</code>, <code>DyninstTBB.cmake</code></td><td>Integration (CI)</td><td><strong>Low</strong> — build-system only change</td><td>Verify CI build times improve; no functional test needed, but CI job validation sufficient</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">rocm-systems#5762</a> <em>(draft)</em></td><td>Add RHEL system deps workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td><code>symbol.cpp</code></td><td>Unit</td><td><strong>Medium</strong> — symbol resolution change on RHEL</td><td>Add symbol-parsing unit test targeting RHEL paths; check <code>tests/unwind/</code></td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">rocm-systems#5098</a></td><td>Fix output index calculation in transpose_a kernel</td><td><a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a></td><td><code>transpose.new.cpp</code></td><td>Unit</td><td><strong>High</strong> — correctness bug fix in compute kernel</td><td>Add a numerical correctness test for transpose output; this is an external contribution and warrants review</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td><code>buffer_storage.cpp</code>, <code>buffer_storage.hpp</code></td><td>Unit</td><td><strong>High</strong> — threading model changed, race conditions possible</td><td>Add unit tests for flush thread lifecycle, cancellation, and destruction ordering</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5690" target="_blank">rocm-systems#5690</a></td><td>clr/hrr: In-tree full capture and playback</td><td><a href="https://github.com/gandryey" target="_blank">@gandryey</a></td><td>20 files: <code>hip_capture.cpp/h</code>, <code>hip_capture_writer.cpp/h</code>, generated files, etc.</td><td>System/Integration</td><td><strong>High</strong> — new capture/playback feature with 20 source files</td><td>Add integration tests for capture/playback round-trip; check <code>tests/</code> for hip capture fixtures</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6295" target="_blank">rocm-systems#6295</a></td><td>Update dyninst submodule &amp; fix asan build failures</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td><code>Packages.cmake</code></td><td>Unit</td><td><strong>Low</strong> — build/CMake dependency update</td><td>Verify existing ASAN CI matrix covers this; no new test likely needed</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6116" target="_blank">rocm-systems#6116</a></td><td>Add <code>rocprofsys_push_trace_with_args</code> and cache region arguments</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>13 files: <code>api.cpp/hpp</code>, <code>dl.cpp/hpp</code>, <code>module_function.cpp/hpp</code>, instrumentation</td><td>Integration</td><td><strong>High</strong> — new public API surface; 13 source files, no tests</td><td>Add unit tests for <code>rocprofsys_push_trace_with_args</code>; extend <code>tests/</code> API test suite</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a></td><td>refactor(rocprof-sys-causal): centralize runtime state</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td><code>impl.cpp</code>, <code>rocprof-sys-causal.cpp/hpp</code></td><td>Unit</td><td><strong>Medium</strong> — runtime state refactor could introduce regressions</td><td>Extend causal profiler tests; check for existing <code>test_causal_*</code> files</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a></td><td>wire ccache (CMake auto-detect + CI cache)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td><code>BuildSettings.cmake</code>, <code>DyninstTBB.cmake</code></td><td>Unit</td><td><strong>Low</strong> — build-system/CI infrastructure only</td><td>Verify CI pipeline correctly caches; no source-level test needed</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5762" target="_blank">rocm-systems#5762</a></td><td>Add RHEL system deps workflow</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td><code>symbol.cpp</code></td><td>Unit</td><td><strong>Medium</strong> — symbol resolution change could affect stack traces</td><td>Add or extend symbol demangling tests; check <code>tests/</code> for <code>demangler_test.cpp</code></td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6430" target="_blank">rocm-systems#6430</a></td><td>[WIP] Fix <code>libelf</code> and <code>libdw</code> dependencies on TheRock builds</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td><code>DyninstElfUtils.cmake</code></td><td>Unit</td><td><strong>Low</strong> — CMake find-module fix</td><td>Ensure existing dyninst integration tests pass on TheRock build; no dedicated test file likely needed</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6445" target="_blank">rocm-systems#6445</a></td><td>[WIP] Unify elfutils discovery</td><td><a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a></td><td><code>DyninstElfUtils.cmake</code>, <code>FindLibDW.cmake</code>, <code>FindLibDwarf.cmake</code>, <code>FindLibELF.cmake</code>, <code>FindLibElf.cmake</code></td><td>Integration</td><td><strong>Medium</strong> — CMake discovery unification across 5 find-modules; build failures already seen</td><td>Add CMake configure-time test or CI matrix test for each distro&#x27;s elf library path</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">rocm-systems#5098</a></td><td>Fix output index calculation in transpose_a kernel</td><td><a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a></td><td><code>transpose.new.cpp</code></td><td>Unit</td><td><strong>High</strong> — bug fix with correctness impact; external contribution</td><td>Add unit test verifying transpose output indices against known-correct reference; check adjacent <code>tests/transpose*.cpp</code></td></tr>
 </tbody></table>
 
 <hr>
@@ -266,9 +272,7 @@
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Last Updated</th><th>Age</th><th>Recommendation</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5351" target="_blank">rocm-systems#5351</a></td><td>[runtime-instrument] Introduce 3 CLI options</td><td><a href="https://github.com/kcossett-amd" target="_blank">@kcossett-amd</a></td><td>2026-05-07</td><td>32d</td><td>CI failing on sanitizers and TheRock; author should rebase and fix failing checks — this is a substantive, non-draft PR that needs forward progress.</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">rocm-systems#5098</a></td><td>Fix output index calculation in transpose_a kernel</td><td><a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a></td><td>2026-05-19</td><td>39d</td><td>External contribution with no review and missing tests; ping author to add tests, then assign a reviewer — or consider closing if unmaintained.</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6237" target="_blank">rocm-systems#6237</a></td><td>Improve Generated Output summary. Cleanup of noisy logs</td><td><a href="https://github.com/marantic-amd" target="_blank">@marantic-amd</a></td><td>2026-05-21</td><td>6d</td><td>CI passing, 15 test files updated — solid PR waiting on review; nudge reviewer to take a look this week.</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5098" target="_blank">rocm-systems#5098</a></td><td>Fix output index calculation in transpose_a kernel</td><td><a href="https://github.com/jared-mcd-han" target="_blank">@jared-mcd-han</a></td><td>2026-05-19</td><td>41d</td><td>External contribution with passing CI but no tests and no review decision in 41 days — ping author to add tests, then proceed with review or close if unresponsive.</td></tr>
 </tbody></table>
 
 <h3>Going Stale (3–24 days no activity)</h3>
@@ -276,26 +280,17 @@
 <table><thead>
 <tr><th>PR</th><th>Title</th><th>Author</th><th>Last Updated</th><th>Age</th></tr>
 </thead><tbody>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6203" target="_blank">rocm-systems#6203</a></td><td>Replace get_env and set_env from timemory</td><td><a href="https://github.com/mradosav-amd" target="_blank">@mradosav-amd</a></td><td>2026-05-20</td><td>7d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-15</td><td>9d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-11</td><td>14d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-12</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>2026-05-12</td><td>13d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5777" target="_blank">rocm-systems#5777</a></td><td>AI NIC changes for Pensando Phase 2</td><td><a href="https://github.com/ajanicijamd" target="_blank">@ajanicijamd</a></td><td>2026-05-21</td><td>4d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4993" target="_blank">rocm-systems#4993</a></td><td>Add hip graph tests</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>2026-05-19</td><td>6d</td></tr>
-<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-19</td><td>70d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a></td><td>align per-link PMC + track names</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-11</td><td>20d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a></td><td>trace_cache/buffer_storage: replace flush thread with std::jthread</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-12</td><td>15d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a></td><td>replace SFINAE traits with C++20 concepts</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-15</td><td>11d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/5349" target="_blank">rocm-systems#5349</a></td><td>[rocdecode, rocjpeg] removed install section</td><td><a href="https://github.com/spolifroni-amd" target="_blank">@spolifroni-amd</a></td><td>2026-05-12</td><td>14d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a></td><td>C++20 support</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-19</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6006" target="_blank">rocm-systems#6006</a></td><td>rocprofsys exception hierarchy + clean stacktrace</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-13</td><td>13d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6009" target="_blank">rocm-systems#6009</a></td><td>wire ccache (CMake auto-detect + CI cache)</td><td><a href="https://github.com/adjordje-amd" target="_blank">@adjordje-amd</a></td><td>2026-05-12</td><td>14d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6057" target="_blank">rocm-systems#6057</a></td><td>Wall Clock migration from timemory</td><td><a href="https://github.com/sputhala-amd" target="_blank">@sputhala-amd</a></td><td>2026-05-20</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6300" target="_blank">rocm-systems#6300</a></td><td>feat: add SPM beta scaffolding</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>2026-05-21</td><td>6d</td></tr>
+<tr><td><a href="https://github.com/ROCm/rocm-systems/pull/6297" target="_blank">rocm-systems#6297</a></td><td>refactor(rocprof-sys-causal): centralize runtime state</td><td><a href="https://github.com/habajpai-amd" target="_blank">@habajpai-amd</a></td><td>2026-05-20</td><td>6d</td></tr>
+<p>| <a href="https://github.com/ROCm/rocm-systems/pull/4620" target="_blank">rocm-systems#4620</a> | Fix <code>update_env</code> handling of <code>REPLACE</code> mode | <a href="https://github.com/dgaliffiAMD" target="_blank">@dgaliffiAMD</a> | 2026-</p>
 </tbody></table>
-
-<hr>
-
-<h2>LLM Observations</h2>
-
-<ul>
-<li><strong>C++20 modernization chain with cascading risk.</strong> There is a dependent PR stack: <a href="https://github.com/ROCm/rocm-systems/pull/4080" target="_blank">rocm-systems#4080</a> (C++20 support, 70d old) → <a href="https://github.com/ROCm/rocm-systems/pull/5992" target="_blank">rocm-systems#5992</a> (C++20 concepts) → <a href="https://github.com/ROCm/rocm-systems/pull/5995" target="_blank">rocm-systems#5995</a> (std::jthread). All three are failing CI. Because #5992 targets the branch produced by #4080, and #5995 targets the branch produced by #5992, none of them can land independently in their current state. The root failure in #4080 needs to be resolved first, or the chain rebased onto <code>develop</code>.</li>
-</ul>
-
-<ul>
-<li><strong>Three &quot;near-merge&quot; PRs with single-point CI failures.</strong> <a href="https://github.com/ROCm/rocm-systems/pull/6288" target="_blank">rocm-systems#6288</a>, <a href="https://github.com/ROCm/rocm-systems/pull/5819" target="_blank">rocm-systems#5819</a>,</li>
-</ul>
 </body>
 </html>

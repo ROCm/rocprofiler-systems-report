@@ -92,6 +92,9 @@ jobs:
         run: |
           mkdir -p public/reports
 
+          # skip Jekyll processing
+          touch public/.nojekyll
+
           # copy static UI (index.html, dashboard pages)
           cp docs/*.html public/ || true
 

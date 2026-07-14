@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # needed for gh-pages deployment
+  contents: read
   pull-requests: read
 
 concurrency:
@@ -17,7 +17,8 @@ jobs:
   llm-report:
     runs-on: [self-hosted, amd-network]
 
-    timeout-minutes: 30
+    # Includes runner queue time — fail fast when no self-hosted runner is available.
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
@@ -42,6 +43,17 @@ jobs:
       LLM_MODEL: Claude-Sonnet-4.6
 
     steps:
+      - name: Validate required secrets
+        run: |
+          missing=()
+          [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ] && missing+=("ANTHROPIC_API_KEY")
+          [ -z "${{ secrets.ANTHROPIC_BASE_URL }}" ] && missing+=("ANTHROPIC_BASE_URL")
+          [ -z "${{ secrets.AMD_LLM_GATEWAY_KEY }}" ] && missing+=("AMD_LLM_GATEWAY_KEY")
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "::error::Missing required secrets: ${missing[*]}"
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -51,9 +63,11 @@ jobs:
           python-version: '3.12'
 
       - name: Generate PR Report (LLM)
+        timeout-minutes: 10
         run: python scripts/generate_llm_report.py
 
       - name: Convert report to HTML for GitHub Pages
+        timeout-minutes: 2
         run: |
           mkdir -p docs/reports
 
@@ -67,17 +81,37 @@ jobs:
             "reports/${REPORT_PREFIX}-latest.md" \
             "docs/reports/${REPORT_PREFIX}-${today}.html"
 
+          for required in \
+            "docs/reports/${REPORT_PREFIX}-latest.html" \
+            "docs/reports/${REPORT_PREFIX}-${today}.html"
+          do
+            if [ ! -s "$required" ]; then
+              echo "::error::Expected report HTML not produced: $required"
+              exit 1
+            fi
+          done
+
       - name: Upload artifacts for publishing
         uses: actions/upload-artifact@v4
         with:
           name: reports-${{ matrix.prefix }}
           path: docs/reports/${{ matrix.prefix }}-*.html
+          if-no-files-found: error
 
   publish:
     needs: llm-report
     runs-on: ubuntu-latest
 
     timeout-minutes: 15
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -87,6 +121,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Validate downloaded artifacts
+        run: |
+          for prefix in rocprofiler-systems rocprofiler-compute; do
+            latest=$(find artifacts -type f -name "${prefix}-latest.html" | head -1)
+            if [ -z "$latest" ] || [ ! -s "$latest" ]; then
+              echo "::error::Missing or empty artifact: ${prefix}-latest.html"
+              exit 1
+            fi
+            echo "Found ${prefix} report: $latest"
+          done
 
       - name: Prepare GitHub Pages content
         run: |
@@ -101,12 +146,25 @@ jobs:
           # copy fresh report HTML files from artifacts
           find artifacts -type f -name "*.html" -exec cp -v {} public/reports/ \;
 
+          for required in \
+            public/reports/rocprofiler-systems-latest.html \
+            public/reports/rocprofiler-compute-latest.html
+          do
+            if [ ! -s "$required" ]; then
+              echo "::error::Pages deploy would publish without: $required"
+              exit 1
+            fi
+          done
+
           echo "=== Final public/ ==="
           find public -type f
 
-      - name: Deploy to GitHub Pages (gh-pages branch)
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: public
+          path: public
+          include-hidden-files: true
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
